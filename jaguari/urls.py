@@ -7,4 +7,6 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^login$', 'sessions.views.login', name='cas_ng_login'),
+    url(r'^logout$', 'sessions.views.logout', name='cas_ng_logout'),
 ]

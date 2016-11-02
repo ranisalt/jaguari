@@ -1,1 +1,2 @@
 django==1.8
+django_cas_ng==3.5.5
