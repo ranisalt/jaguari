@@ -1,0 +1,26 @@
+{% extends 'template.html' %}
+
+{% block 'head-ext' %}
+  {% load staticfiles %}
+  <link rel="stylesheet" href="{% static 'jaguari.css' %}">
+{% endblock %}
+
+{% block 'content' %}
+  <div class="site-wrapper">
+    <div class="site-wrapper-inner">
+      <div class="inner cover">
+        <h1 class="cover-heading">Carteira de Estudante</h1>
+        <p class="lead">
+          Um textinho batuta explicando como funciona a meia
+          entrada e a nova carteira de estudante, talvez até
+          falando quanto custa.
+        </p>
+        <p class="lead">
+          <a class="btn btn-lg btn-secondary" href="{% url 'order-new' %}">
+            Solicite a sua!
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'template.html' %}
+
+{% block 'content' %}
+  <div class="container">
+    <div class="form-group">
+      <label for="display-name">Nome</label>
+      <p>{{ order.student.get_full_name }}</p>
+    </div>
+    <div class="form-group">
+      <label for="birthday">Data de nascimento</label>
+      <p>{{ order.birthday.isoformat }}</p>
+    </div>
+    <div class="form-group">
+      <label for="cpf">CPF</label>
+      <p>{{ order.cpf }}</p>
+    </div>
+    <div class="form-group">
+      <label for="identity-number">RG</label>
+      <p>{{ order.identity_number }} {{ order.identity_issuer }}/{{ order.identity_state }}</p>
+    </div>
+    <div class="form-group">
+      <label for="enrollment-number">Matrícula</label>
+      <p>{{ order.enrollment_number }}</p>
+    </div>
+    <div class="form-group">
+      <label for="degree-tier">Grau de escolaridade</label>
+      <p>{{ order.degree.get_tier_display }}</p>
+    </div>
+    <div class="form-group">
+      <label for="degree-name">Nome do curso</label>
+      <p>{{ order.degree.name }}</p>
+    </div>
+    <form action="{% url 'orders' %}" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="picture">Foto</label>
+        <input type="file"
+               class="form-control-file"
+               id="picture"
+               aria-describedby="picture-help">
+        <small id="picture-help" class="form-text text-muted">
+          Escolha uma foto em que seu rosto esteja visível e focado.
+        </small>
+      </div>
+      <button type="submit" class="btn btn-primary">Finalizar pedido</button>
+    </form>
+  </div>
+{% endblock %}
