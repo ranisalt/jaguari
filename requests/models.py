@@ -48,7 +48,8 @@ def user_authenticated(user, attributes, **kwargs):
 
 
 class Order(models.Model):
-    use_code = models.CharField(default=random_use_code, primary_key=True)
+    id = models.CharField(default=random_use_code, primary_key=True,
+                          max_length=settings.USE_CODE_LENGTH)
     student = models.ForeignKey(User, on_delete=models.PROTECT)
     degree = models.ForeignKey(Degree, on_delete=models.PROTECT)
     birthday = models.DateField()
