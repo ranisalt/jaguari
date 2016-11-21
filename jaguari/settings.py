@@ -69,18 +69,6 @@ CAS_EXTRA_LOGIN_PARAMS = {
 
 CAGR_CREDENTIALS = ('', '',)
 
-CAGR_WEBSERVICE_URL = 'https://ws.ufsc.br/'
-
-CAGR_DEGREE_URL = urljoin(CAGR_WEBSERVICE_URL,
-                                  'CAGRService/cursoGraduacaoAluno/')
-
-CAGR_INFO_URL = urljoin(CAGR_WEBSERVICE_URL,
-                                'CadastroPessoaService/vinculosPessoaById/')
-
-CAS_LOGOUT_COMPLETELY = True
-
-# CAS_REDIRECT_URL = 'https://cie.dce.ufsc.br/login'
-
 CAS_SERVER_URL = 'https://cie.dce.ufsc.br/'
 
 CAS_USERNAME_ATTRIBUTE = 'idPessoa'
