@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 from django.http.request import HttpRequest
 from django.test import Client, TestCase
 from .models import Order
-from .views import new
 
 
 def resource(name: str):

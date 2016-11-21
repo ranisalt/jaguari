@@ -41,7 +41,7 @@ class OrderDetailView(View):
 
 @login_required
 def new(request):
-    order = Order.fetch(request.user)
+    order = Order.objects.fetch(request.user)
     request.session['order'] = order.id
     return render(request, 'requests/new.html', {
         'order': order

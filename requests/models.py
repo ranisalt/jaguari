@@ -6,11 +6,15 @@ from django.db import models
 from django.dispatch import receiver
 from django_cas_ng.signals import cas_user_authenticated
 from django_localflavor_br.br_states import STATE_CHOICES
+from six.moves.urllib.parse import urljoin
 
 
 class DegreeManager(models.Manager):
+    CAGR_DEGREE_URL = urljoin(settings.CAGR_WEBSERVICE_URL,
+                              'CAGRService/cursoGraduacaoAluno/')
+
     def fetch(self, enrollment_hint):
-        response = make_request(settings.CAGR_DEGREE_URL, enrollment_hint)
+        response = make_request(self.CAGR_DEGREE_URL, enrollment_hint)
 
         return self.update_or_create(
             id=response['codigo'],
@@ -36,15 +40,42 @@ class Degree(models.Model):
 
     objects = DegreeManager()
 
-    def __str__(self):
-        return "%s" % self.name
-
 
 @receiver(cas_user_authenticated)
 def user_authenticated(user, attributes, **kwargs):
     user.email = attributes['email']
     user.first_name, user.last_name = attributes['nomeSocial'].split(maxsplit=1)
     user.save()
+
+
+class OrderManager(models.Manager):
+    CAGR_INFO_URL = urljoin(settings.CAGR_WEBSERVICE_URL,
+                            'CadastroPessoaService/vinculosPessoaById/')
+
+    def fetch(self, user):
+        def is_valid(ativo, codigoSituacao, codigoVinculo, **kwargs):
+            """
+            codigoSituacao == 0 means regular student
+            codivoVinculo == 1 means undergraduate
+            """
+            return ativo and codigoSituacao == 0 and codigoVinculo == 1
+
+        response = make_request(self.CAGR_INFO_URL, user.username)
+        *_, data = (link for link in response if is_valid(**link))
+
+        enrollment_number = data['matricula']
+        degree, _ = Degree.objects.fetch(str(enrollment_number))
+        birthday = iso8601.parse_date(data['dataNascimento'])
+        return self.create(
+            student=user,
+            degree=degree,
+            birthday=birthday.date(),
+            cpf=str(data['cpf']).zfill(11),
+            identity_number=data['identidade'],
+            identity_issuer=data['siglaOrgaoEmissorIdentidade'],
+            identity_state=data['codigoUfIdentidade'],
+            enrollment_number=enrollment_number,
+        )
 
 
 class Order(models.Model):
@@ -64,28 +95,4 @@ class Order(models.Model):
     class Meta:
         ordering = ['-created_at']
 
-    @classmethod
-    def fetch(cls, user):
-        def is_valid(ativo, codigoSituacao, codigoVinculo, **kwargs):
-            """
-            codigoSituacao == 0 means regular student
-            codivoVinculo == 1 means undergraduate
-            """
-            return ativo and codigoSituacao == 0 and codigoVinculo == 1
-
-        response = make_request(settings.CAGR_INFO_URL, user.username)
-        *_, data = (link for link in response if is_valid(**link))
-
-        enrollment_number = data['matricula']
-        degree, _ = Degree.objects.fetch(str(enrollment_number))
-        birthday = iso8601.parse_date(data['dataNascimento'])
-        return cls.objects.create(
-            student=user,
-            degree=degree,
-            birthday=birthday.date(),
-            cpf=str(data['cpf']).zfill(11),
-            identity_number=data['identidade'],
-            identity_issuer=data['siglaOrgaoEmissorIdentidade'],
-            identity_state=data['codigoUfIdentidade'],
-            enrollment_number=enrollment_number,
-        )
+    objects = OrderManager()
