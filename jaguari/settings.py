@@ -38,7 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_cas_ng',
     'accounts',
-    'requests',
+    'orders',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -1,20 +1,19 @@
 import iso8601
-from .utils import make_request, random_use_code
+import random
+import requests
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.dispatch import receiver
 from django_cas_ng.signals import cas_user_authenticated
 from django_localflavor_br.br_states import STATE_CHOICES
-from six.moves.urllib.parse import urljoin
 
 
 class DegreeManager(models.Manager):
-    CAGR_DEGREE_URL = urljoin(settings.CAGR_WEBSERVICE_URL,
-                              'CAGRService/cursoGraduacaoAluno/')
+    endpoint = 'https://ws.ufsc.br/CAGRService/cursoGraduacaoAluno/{}'
 
     def fetch(self, enrollment_hint):
-        response = make_request(self.CAGR_DEGREE_URL, enrollment_hint)
+        response = requests.get(self.endpoint.format(enrollment_hint)).json()
 
         return self.update_or_create(
             id=response['codigo'],
@@ -49,8 +48,7 @@ def user_authenticated(user, attributes, **kwargs):
 
 
 class OrderManager(models.Manager):
-    CAGR_INFO_URL = urljoin(settings.CAGR_WEBSERVICE_URL,
-                            'CadastroPessoaService/vinculosPessoaById/')
+    endpoint = 'https://ws.ufsc.br/CadastroPessoaService/vinculosPessoaById/{}'
 
     def fetch(self, user):
         def is_valid(ativo, codigoSituacao, codigoVinculo, **kwargs):
@@ -60,8 +58,9 @@ class OrderManager(models.Manager):
             """
             return ativo and codigoSituacao == 0 and codigoVinculo == 1
 
-        response = make_request(self.CAGR_INFO_URL, user.username)
-        *_, data = (link for link in response if is_valid(**link))
+        response = requests.get(self.endpoint.format(user.get_username()),
+                                auth=settings.CAGR_CREDENTIALS)
+        *_, data = (link for link in response.json() if is_valid(**link))
 
         enrollment_number = data['matricula']
         degree, _ = Degree.objects.fetch(str(enrollment_number))
@@ -76,6 +75,11 @@ class OrderManager(models.Manager):
             identity_state=data['codigoUfIdentidade'],
             enrollment_number=enrollment_number,
         )
+
+
+def random_use_code():
+    return ''.join(random.choice(settings.USE_CODE_ALPHABET) for _ in
+                   range(settings.USE_CODE_LENGTH))
 
 
 class Order(models.Model):

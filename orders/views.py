@@ -16,7 +16,6 @@ class OrdersView(View):
     def post(self, request: HttpRequest) -> HttpResponse:
         """Create new order"""
         order = self.model.objects.get(id=request.session['order'])
-        pass
 
     def get_queryset(self):
         return self.model.objects.filter(student=self.request.user)
