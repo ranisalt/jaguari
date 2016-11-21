@@ -103,7 +103,7 @@ class Requests(TestCase):
 
         try:
             self.user = User.objects.get()
-        except User.DoesNotExist:
+        except User.DoesNotExist:  # pragma: no cover
             self.user = User.objects.create_user(username='100000000400000')
 
     def test_new_order(self):
