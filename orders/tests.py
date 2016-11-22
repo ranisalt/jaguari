@@ -112,11 +112,11 @@ class Requests(TestCase):
         with responses.RequestsMock() as r:
             r.add(responses.GET,
                   'https://ws.ufsc.br/CAGRService/cursoGraduacaoAluno/13100000',
-                  json=degree, status=200)
+                  json=degree)
             r.add(responses.GET,
                   'https://ws.ufsc.br/CadastroPessoaService'
                   '/vinculosPessoaById/100000000400000',
-                  json=student, status=200)
+                  json=student)
             self.client.get('/orders/new/', follow=True)
 
         self.assertEqual(Order.objects.count(), 1)
