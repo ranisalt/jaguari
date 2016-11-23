@@ -13,8 +13,6 @@ def resource(name: str):
     return open(os.path.join(settings.BASE_DIR, 'tests', name), mode='rb')
 
 
-request.urlopen = Mock(side_effect=[resource('login.xml')])
-
 degree = {
     "codigo": 208,
     "nome": "CIÊNCIAS DA COMPUTAÇÃO",
@@ -93,6 +91,8 @@ student = [
 
 class Requests(TestCase):
     def setUp(self):
+        request.urlopen = Mock(side_effect=[resource('login.xml')])
+
         self.request = HttpRequest()
         self.request.session = {}
 
