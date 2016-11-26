@@ -28,6 +28,39 @@ class OrdersView(View):
         """Index of user orders"""
         pass
 
+    def get_queryset(self):
+        return self.model.objects.filter(student=self.request.user)
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(OrdersView, self).dispatch(*args, **kwargs)
+
+
+class OrderDetailView(View):
+    model = Order
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        """Show a single order"""
+        pass
+
+    def get_queryset(self):
+        return self.model.objects.filter(pk=self.request.session['order'])
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(OrderDetailView, self).dispatch(*args, **kwargs)
+
+
+class OrderCreateView(View):
+    model = Order
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        order = self.model.objects.fetch(request.user)
+        request.session['order'] = order.id
+        return render(request, 'requests/new.html', {
+            'order': order
+        })
+
     def post(self, request: HttpRequest) -> HttpResponse:
         """Create new order"""
         order = get_object_or_404(self.model, pk=request.session['order'])
@@ -41,33 +74,3 @@ class OrdersView(View):
         root = etree.fromstring(res.text)
         token = root.xpath('//Token/text()')[0]
         return redirect(settings.MOIP_CHECKOUT_URL.format(token))
-
-
-    def get_queryset(self):
-        return self.model.objects.filter(student=self.request.user)
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(OrdersView, self).dispatch(*args, **kwargs)
-
-
-class OrderDetailView(View):
-    model = Order
-    queryset = Order.objects.all()
-
-    def get(self, request: HttpRequest) -> HttpResponse:
-        """Show a single order"""
-        pass
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(OrderDetailView, self).dispatch(*args, **kwargs)
-
-
-@login_required
-def new(request):
-    order = Order.objects.fetch(request.user)
-    request.session['order'] = order.id
-    return render(request, 'requests/new.html', {
-        'order': order
-    })

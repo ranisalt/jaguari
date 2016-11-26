@@ -1,7 +1,7 @@
 from django.conf.urls import url
-from . import views
+from .views import OrderCreateView, OrdersView
 
 urlpatterns = [
-    url(r'^new/$', views.new, name='order-new'),
-    url(r'^$', views.OrdersView.as_view(), name='orders')
+    url(r'^$', OrdersView.as_view(), name='orders'),
+    url(r'^new/$', OrderCreateView.as_view(), name='order-new'),
 ]
