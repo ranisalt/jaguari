@@ -93,13 +93,13 @@ class Requests(TestCase):
     def setUp(self):
         request.urlopen = Mock(side_effect=[resource('login.xml')])
 
-        self.request = HttpRequest()
-        self.request.session = {}
+        req = HttpRequest()
+        req.session = {}
 
         self.client = Client()
         self.client.login(ticket='ST-b91d310a-6d50-45a3-9a1c-1c36fa135ab3',
                           service='http://localhost/?next=%2Forders%2Fnew%2F',
-                          request=self.request)
+                          request=req)
 
         try:
             self.user = User.objects.get()
