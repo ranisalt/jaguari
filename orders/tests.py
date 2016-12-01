@@ -123,3 +123,22 @@ class Requests(TestCase):
 
         order = Order.objects.get()
         self.assertEqual(order.student, self.user)
+
+    def test_post_order(self):
+        self.assertEqual(Order.objects.count(), 0)
+
+        with responses.RequestsMock() as r:
+            r.add(responses.GET,
+                  'https://ws.ufsc.br/CAGRService/cursoGraduacaoAluno/13100000',
+                  json=degree)
+            r.add(responses.GET,
+                  'https://ws.ufsc.br/CadastroPessoaService'
+                  '/vinculosPessoaById/100000000400000',
+                  json=student)
+            self.client.get('/orders/new/', follow=True)
+
+        self.assertEqual(Order.objects.count(), 1)
+        order = Order.objects.get()
+
+        res = self.client.post('/orders/new/')
+        self.assertEqual(res.status_code, 302)

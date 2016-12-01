@@ -1,6 +1,7 @@
 import iso8601
-import random
 import requests
+import responses
+import uuid
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
@@ -77,26 +78,37 @@ class OrderManager(models.Manager):
         )
 
 
-def random_use_code():
-    return ''.join(random.choice(settings.USE_CODE_ALPHABET) for _ in
-                   range(settings.USE_CODE_LENGTH))
-
-
 class Order(models.Model):
-    id = models.CharField(default=random_use_code, primary_key=True,
-                          max_length=settings.USE_CODE_LENGTH)
-    student = models.ForeignKey(User, on_delete=models.PROTECT)
-    degree = models.ForeignKey(Degree, on_delete=models.PROTECT)
-    birthday = models.DateField()
-    cpf = models.CharField(max_length=11)
-    identity_number = models.TextField()
-    identity_issuer = models.TextField()
-    identity_state = models.CharField(choices=STATE_CHOICES, max_length=2)
-    enrollment_number = models.TextField()
-    certificate = models.BinaryField(editable=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    NOT_READY = 0
+    READY = 1
+    DELIVERED = 2
+    PRINT_STATUS_CHOICES = (
+        (NOT_READY, 'Aguardando'),
+        (READY, 'Impresso'),
+        (DELIVERED, 'Entregue'),
+    )
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    use_code = models.CharField(max_length=8, editable=False)
+    student = models.ForeignKey(User, on_delete=models.PROTECT, editable=False)
+    degree = models.ForeignKey(Degree, on_delete=models.PROTECT, editable=False)
+    birthday = models.DateField(editable=False)
+    cpf = models.CharField(max_length=11, editable=False)
+    identity_number = models.TextField(editable=False)
+    identity_issuer = models.TextField(editable=False)
+    identity_state = models.CharField(choices=STATE_CHOICES,
+                                      max_length=2,
+                                      editable=False)
+    enrollment_number = models.TextField(editable=False)
+    picture = models.ImageField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    print_status = models.SmallIntegerField(choices=PRINT_STATUS_CHOICES,
+                                            default=NOT_READY)
 
     class Meta:
         ordering = ['-created_at']
+
+    def __repr__(self):
+        return self.use_code
 
     objects = OrderManager()

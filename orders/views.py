@@ -1,11 +1,8 @@
-import requests
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
-from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views.generic import View
-from lxml import etree
+from pagseguro.api import PagSeguroApi, PagSeguroItem
 from .models import Order
 
 MOIP_XML = """
@@ -24,7 +21,7 @@ MOIP_XML = """
 class OrdersView(View):
     model = Order
 
-    def get(self, request: HttpRequest) -> HttpResponse:
+    def get(self, request):
         """Index of user orders"""
         pass
 
@@ -39,7 +36,7 @@ class OrdersView(View):
 class OrderDetailView(View):
     model = Order
 
-    def get(self, request: HttpRequest) -> HttpResponse:
+    def get(self, request):
         """Show a single order"""
         pass
 
@@ -54,23 +51,37 @@ class OrderDetailView(View):
 class OrderCreateView(View):
     model = Order
 
-    def get(self, request: HttpRequest) -> HttpResponse:
+    def get(self, request):
         order = self.model.objects.fetch(request.user)
-        request.session['order'] = order.id
+        request.session['order'] = str(order.pk)
         return render(request, 'requests/new.html', {
             'order': order
         })
 
-    def post(self, request: HttpRequest) -> HttpResponse:
+    def post(self, request):
         """Create new order"""
-        order = get_object_or_404(self.model, pk=request.session['order'])
+        order = get_object_or_404(Order, pk=request.session['order'])
+        order.picture = request.FILES['picture']
+        order.save()
 
-        payload = MOIP_XML.format(order_id=order.pk)
+        item = PagSeguroItem(id=str(order.pk),
+                             description='Carteira de Identificação Estudantil',
+                             amount='15.00',
+                             quantity=1)
 
-        res = requests.post(settings.MOIP_ORDER_URL,
-                            auth=settings.MOIP_CREDENTIALS,
-                            data=payload,
-                            headers={'content-type': 'application/xml'})
-        root = etree.fromstring(res.text)
-        token = root.xpath('//Token/text()')[0]
-        return redirect(settings.MOIP_CHECKOUT_URL.format(token))
+        api = PagSeguroApi(reference=str(order.pk),
+                           senderEmail=order.student.email,
+                           senderName=order.student.get_full_name(),
+                           shippingAddressPostalCode='88040000',
+                           shippingAddressNumber='s/n',
+                           shippingAddressComplement='',
+                           shippingCost='0.00',
+                           shippingType=3)
+
+        api.add_item(item)
+        checkout = api.checkout()
+        return redirect(checkout['redirect_url'])
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(OrderCreateView, self).dispatch(*args, **kwargs)

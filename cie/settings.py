@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-import string
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -36,13 +35,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'django_cas_ng',
+    'pagseguro',
     'accounts',
     'orders',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -56,26 +58,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'django_cas_ng.backends.CASBackend',
 )
-
-USE_CODE_ALPHABET = string.ascii_uppercase + string.digits
-USE_CODE_LENGTH = 8
-
-CAGR_CREDENTIALS = ('', '')
-
-CAS_EXTRA_LOGIN_PARAMS = {
-    'userType': 'padrao',
-    'convertToUserType': 'alunoGraduacao',
-    'lockUserType': '1',
-}
-CAS_SERVER_URL = 'https://cie.dce.ufsc.br/'
-CAS_USERNAME_ATTRIBUTE = 'idPessoa'
-CAS_VERSION = 'CAS_2_SAML_1_0'
-
-MOIP_CREDENTIALS = ('', '')
-MOIP_CHECKOUT_URL = 'https://desenvolvedor.moip.com.br/sandbox/Instrucao.do' \
-                    '?token={}'
-MOIP_ORDER_URL = 'https://desenvolvedor.moip.com.br/sandbox/ws/alpha' \
-                 '/EnviarInstrucao/Unica'
 
 ROOT_URLCONF = 'cie.urls'
 
@@ -128,3 +110,29 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_URL = '/static/'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# File upload configuration
+MEDIA_ROOT = os.path.join(BASE_DIR, 'upload')
+
+# CORS configuration
+CORS_ORIGIN_WHITELIST = ('https://sandbox.pagseguro.uol.com.br',)
+SECURE_REDIRECT_EXEMPT = 'orders/callback/'
+
+# Student database credentials
+CAGR_CREDENTIALS = ('', '')
+
+# CAS login configuration
+CAS_EXTRA_LOGIN_PARAMS = {
+    'userType': 'padrao',
+    'convertToUserType': 'alunoGraduacao',
+    'lockUserType': '1',
+}
+CAS_SERVER_URL = ''
+CAS_USERNAME_ATTRIBUTE = 'idPessoa'
+CAS_VERSION = 'CAS_2_SAML_1_0'
+
+# Payment gateway configuration
+PAGSEGURO_EMAIL = ''
+PAGSEGURO_TOKEN = ''
+PAGSEGURO_SANDBOX = True
+PAGSEGURO_LOG_IN_MODEL = True
