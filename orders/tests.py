@@ -77,7 +77,7 @@ student = [
         "matricula": 13100000,
         "codigoCurso": 208,
         "nomeCurso": "CIÊNCIAS DA COMPUTAÇÃO",
-        "nome": "John Doe",
+        "nome": "John Edward Gammell",
         "dataNascimento": "1990-01-01T00:00:00-03:00",
         "cpf": 26063723102,
         "identidade": "389372869",
@@ -120,6 +120,10 @@ class Requests(TestCase):
             self.client.get('/orders/new/', follow=True)
 
         self.assertEqual(Order.objects.count(), 1)
+
+        order = Order.objects.get()
+        self.assertEqual(order.enrollment_number, student[0]['id'])
+        self.assertEqual(order.student.get_full_name(), student[0]['nome'])
 
         order = Order.objects.get()
         self.assertEqual(order.student, self.user)
