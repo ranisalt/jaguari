@@ -5,18 +5,6 @@ from django.views.generic import View
 from pagseguro.api import PagSeguroApi, PagSeguroItem
 from .models import Order
 
-MOIP_XML = """
-<EnviarInstrucao>
-    <InstrucaoUnica>
-        <Razao>Carteira de Identificação Estudantil</Razao>
-        <Valores>
-            <Valor moeda='BRL'>15.00</Valor>
-        </Valores>
-        <IdProprio>{order_id}</IdProprio>
-    </InstrucaoUnica>
-</EnviarInstrucao>
-"""
-
 
 class OrdersView(View):
     model = Order
