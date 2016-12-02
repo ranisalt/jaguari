@@ -1,52 +1,87 @@
 {% extends 'template.html' %}
 
+{% block 'head-ext' %}
+  <style>
+    body {
+      padding-top: 3rem;
+    }
+
+    label {
+      font-weight: 600;
+      text-align: right;
+    }
+  </style>
+{% endblock %}
+
 {% block 'content' %}
   <div class="container">
-    <div class="form-group">
-      <label for="display-name">Nome</label>
-      <p>{{ order.student.get_full_name }}</p>
-    </div>
-    <div class="form-group">
-      <label for="birthday">Data de nascimento</label>
-      <p>{{ order.birthday.isoformat }}</p>
-    </div>
-    <div class="form-group">
-      <label for="cpf">CPF</label>
-      <p>{{ order.cpf }}</p>
-    </div>
-    <div class="form-group">
-      <label for="identity-number">RG</label>
-      <p>{{ order.identity_number }} {{ order.identity_issuer }}/{{ order.identity_state }}</p>
-    </div>
-    <div class="form-group">
-      <label for="enrollment-number">Matrícula</label>
-      <p>{{ order.enrollment_number }}</p>
-    </div>
-    <div class="form-group">
-      <label for="degree-tier">Grau de escolaridade</label>
-      <p>{{ order.degree.get_tier_display }}</p>
-    </div>
-    <div class="form-group">
-      <label for="degree-name">Nome do curso</label>
-      <p>{{ order.degree.name }}</p>
-    </div>
     <form action="{% url 'order-new' %}"
           method="post"
           enctype="multipart/form-data">
       {% csrf_token %}
-      <div class="form-group">
-        <label for="picture">Foto</label>
-        <input type="file"
-               class="form-control-file"
-               id="picture"
-               name="picture"
-               aria-describedby="picture-help"
-               required>
-        <small id="picture-help" class="form-text text-muted">
-          Escolha uma foto em que seu rosto esteja visível e focado.
-        </small>
+      <div class="form-group row">
+        <label for="display-name" class="col-sm-3">Nome</label>
+        <div class="col-sm-9">
+          <p>{{ order.student.get_full_name }}</p>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary">Finalizar pedido</button>
+      <div class="form-group row">
+        <label for="birthday" class="col-sm-3">Data de nascimento</label>
+        <div class="col-sm-9">
+          <p>{{ order.birthday.isoformat }}</p>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="cpf" class="col-sm-3">CPF</label>
+        <div class="col-sm-9">
+          <p>{{ order.cpf }}</p>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="identity-number" class="col-sm-3">RG</label>
+        <div class="col-sm-9">
+          <p>{{ order.identity_number }} {{ order.identity_issuer }}/{{ order.identity_state }}</p>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="enrollment-number"
+               class="col-sm-3">Matrícula</label>
+        <div class="col-sm-9">
+          <p>{{ order.enrollment_number }}</p>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="degree-tier" class="col-sm-3">Grau de escolaridade</label>
+        <div class="col-sm-9">
+          <p>{{ order.degree.get_tier_display }}</p>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="degree-name" class="col-sm-3">Nome do curso</label>
+        <div class="col-sm-9">
+          <p>{{ order.degree.name }}</p>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="picture" class="col-sm-3">Foto</label>
+        <div class="col-sm-9">
+          <input type="file"
+                 class="form-control-file"
+                 id="picture"
+                 name="picture"
+                 aria-describedby="picture-help"
+                 required>
+          <small id="picture-help" class="form-text text-muted">
+            Escolha uma foto em que seu rosto esteja visível e focado.
+          </small>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="offset-sm-3 col-sm-9">
+          <button type="submit" class="btn btn-primary">Finalizar pedido
+          </button>
+        </div>
+      </div>
     </form>
   </div>
 {% endblock %}
