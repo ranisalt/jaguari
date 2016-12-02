@@ -1,2 +1,7 @@
 django==1.8
 django_cas_ng==3.5.5
+django-localflavor-br==1.0
+django-pagseguro2==1.1.1
+iso8601==0.1.11
+pillow==3.4.2
+requests==2.12.1
