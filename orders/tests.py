@@ -142,7 +142,9 @@ class Requests(TestCase):
             self.client.get('/orders/new/', follow=True)
 
         self.assertEqual(Order.objects.count(), 1)
-        order = Order.objects.get()
 
-        res = self.client.post('/orders/new/')
+        with resource('image.jpg') as picture:
+            res = self.client.post('/orders/new/', {
+                'picture': picture
+            })
         self.assertEqual(res.status_code, 302)
