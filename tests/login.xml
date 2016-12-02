@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+  <SOAP-ENV:Header/>
+  <SOAP-ENV:Body>
+      <Response xmlns="urn:oasis:names:tc:SAML:1.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:1.0:assertion" xmlns:samlp="urn:oasis:names:tc:SAML:1.0:protocol" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" IssueInstant="{now}" MajorVersion="1" MinorVersion="1" Recipient="{service}" ResponseID="{id}">
+      <Status>
+        <StatusCode Value="samlp:Success"/>
+      </Status>
+      <Assertion xmlns="urn:oasis:names:tc:SAML:1.0:assertion" AssertionID="{id}" IssueInstant="{now}" Issuer="localhost" MajorVersion="1" MinorVersion="1">
+          <Conditions NotBefore="{before}" NotOnOrAfter="{after}">
+          <AudienceRestrictionCondition>
+              <Audience>{service}</Audience>
+          </AudienceRestrictionCondition>
+        </Conditions>
+        <AttributeStatement>
+          <Subject>
+            <NameIdentifier>13100000</NameIdentifier>
+            <SubjectConfirmation>
+              <ConfirmationMethod>urn:oasis:names:tc:SAML:1.0:cm:artifact</ConfirmationMethod>
+            </SubjectConfirmation>
+          </Subject>
+          <Attribute AttributeName="idPessoa" AttributeNamespace="http://www.ja-sig.org/products/cas/">
+            <AttributeValue>100000000400000</AttributeValue>
+          </Attribute>
+          <Attribute AttributeName="nomeSocial" AttributeNamespace="http://www.ja-sig.org/products/cas/">
+            <AttributeValue>John Edward Gammell</AttributeValue>
+          </Attribute>
+          <Attribute AttributeName="email" AttributeNamespace="http://www.ja-sig.org/products/cas/">
+            <AttributeValue>john@gmail.com</AttributeValue>
+          </Attribute>
+          <Attribute AttributeName="cadastroVerificado" AttributeNamespace="http://www.ja-sig.org/products/cas/">
+            <AttributeValue>true</AttributeValue>
+          </Attribute>
+          <Attribute AttributeName="login" AttributeNamespace="http://www.ja-sig.org/products/cas/">
+            <AttributeValue>john.g</AttributeValue>
+          </Attribute>
+          <Attribute AttributeName="dataNascimento" AttributeNamespace="http://www.ja-sig.org/products/cas/">
+            <AttributeValue>19900101</AttributeValue>
+          </Attribute>
+          <Attribute AttributeName="cpf" AttributeNamespace="http://www.ja-sig.org/products/cas/">
+            <AttributeValue>26063723102</AttributeValue>
+          </Attribute>
+          <Attribute AttributeName="nome" AttributeNamespace="http://www.ja-sig.org/products/cas/">
+            <AttributeValue>John Edward Gammell</AttributeValue>
+          </Attribute>
+          <Attribute AttributeName="personName" AttributeNamespace="http://www.ja-sig.org/products/cas/">
+            <AttributeValue>John Edward Gammell</AttributeValue>
+          </Attribute>
+          <Attribute AttributeName="matricula" AttributeNamespace="http://www.ja-sig.org/products/cas/">
+            <AttributeValue>13100000</AttributeValue>
+          </Attribute>
+          <Attribute AttributeName="userType" AttributeNamespace="http://www.ja-sig.org/products/cas/">
+            <AttributeValue>alunoGraduacao</AttributeValue>
+          </Attribute>
+        </AttributeStatement>
+        <AuthenticationStatement AuthenticationInstant="{now}" AuthenticationMethod="urn:oasis:names:tc:SAML:1.0:am:unspecified">
+          <Subject>
+            <NameIdentifier>13100000</NameIdentifier>
+            <SubjectConfirmation>
+              <ConfirmationMethod>urn:oasis:names:tc:SAML:1.0:cm:artifact</ConfirmationMethod>
+            </SubjectConfirmation>
+          </Subject>
+        </AuthenticationStatement>
+      </Assertion>
+    </Response>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
