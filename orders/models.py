@@ -1,6 +1,5 @@
 import iso8601
 import requests
-import responses
 import uuid
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -78,6 +77,13 @@ class OrderManager(models.Manager):
         )
 
 
+def picture_path(instance, filename: str) -> str:
+    import os
+    head, tail = os.path.split(filename)
+    root, ext = os.path.splitext(tail)
+    return os.path.join(head, ''.join([str(instance.pk), ext]))
+
+
 class Order(models.Model):
     NOT_READY = 0
     READY = 1
@@ -100,7 +106,7 @@ class Order(models.Model):
                                       max_length=2,
                                       editable=False)
     enrollment_number = models.TextField(editable=False)
-    picture = models.ImageField(blank=True)
+    picture = models.ImageField(blank=True, upload_to=picture_path)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     print_status = models.SmallIntegerField(choices=PRINT_STATUS_CHOICES,
                                             default=NOT_READY)
