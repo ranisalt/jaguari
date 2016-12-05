@@ -33,7 +33,7 @@ class OrderCreateView(LoginRequiredMixin, View):
     def get(self, request):
         order = self.model.objects.fetch(request.user)
         request.session['order'] = str(order.pk)
-        return render(request, 'requests/new.html', {
+        return render(request, 'orders/new.html', {
             'order': order
         })
 

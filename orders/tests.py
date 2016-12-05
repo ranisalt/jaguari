@@ -3,7 +3,7 @@ import os
 import responses
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.test import Client, TestCase, override_settings
+from django.test import Client, TransactionTestCase, override_settings
 from .models import Order
 
 
@@ -29,7 +29,7 @@ def mock_cagr() -> responses.RequestsMock:
 
 
 @override_settings(MEDIA_ROOT='/tmp/upload', PAGSEGURO_SANDBOX=True)
-class Orders(TestCase):
+class Orders(TransactionTestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(username='100000000400000',
@@ -44,6 +44,7 @@ class Orders(TestCase):
 
         # ensure response is OK status and order is created
         self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed(response, 'orders/new.html')
         self.assertEqual(1, Order.objects.count())
 
         order = Order.objects.get()
