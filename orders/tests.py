@@ -28,7 +28,7 @@ def mock_cagr() -> responses.RequestsMock:
     return r
 
 
-@override_settings(MEDIA_ROOT='/tmp/upload')
+@override_settings(MEDIA_ROOT='/tmp/upload', PAGSEGURO_SANDBOX=True)
 class Orders(TestCase):
     def setUp(self):
         self.client = Client()
@@ -75,4 +75,8 @@ class Orders(TestCase):
                 'picture': picture
             })
 
+        # ensure response is redirect to payment gateway
         self.assertEqual(302, response.status_code)
+        self.assertRegex(response.url,
+                         r'^https://sandbox\.pagseguro\.uol\.com\.br/v2'
+                         r'/checkout/payment\.html\?code=\w+$')
