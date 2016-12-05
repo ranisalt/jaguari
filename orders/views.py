@@ -1,6 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils.decorators import method_decorator
 from django.views.generic import View
 from pagseguro.api import PagSeguroApi, PagSeguroItem
 from .models import Order
@@ -17,7 +16,7 @@ class OrdersView(LoginRequiredMixin, View):
         return self.model.objects.filter(student=self.request.user)
 
 
-class OrderDetailView(LoginRequiredMixin, View):
+class OrderDetailView(View):
     model = Order
 
     def get(self, request):
