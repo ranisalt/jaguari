@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views.generic import View
@@ -6,7 +6,7 @@ from pagseguro.api import PagSeguroApi, PagSeguroItem
 from .models import Order
 
 
-class OrdersView(View):
+class OrdersView(LoginRequiredMixin, View):
     model = Order
 
     def get(self, request):
@@ -16,12 +16,8 @@ class OrdersView(View):
     def get_queryset(self):
         return self.model.objects.filter(student=self.request.user)
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(OrdersView, self).dispatch(*args, **kwargs)
 
-
-class OrderDetailView(View):
+class OrderDetailView(LoginRequiredMixin, View):
     model = Order
 
     def get(self, request):
@@ -31,12 +27,8 @@ class OrderDetailView(View):
     def get_queryset(self):
         return self.model.objects.filter(pk=self.request.session['order'])
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(OrderDetailView, self).dispatch(*args, **kwargs)
 
-
-class OrderCreateView(View):
+class OrderCreateView(LoginRequiredMixin, View):
     model = Order
 
     def get(self, request):
@@ -69,7 +61,3 @@ class OrderCreateView(View):
         api.add_item(item)
         checkout = api.checkout()
         return redirect(checkout['redirect_url'])
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(OrderCreateView, self).dispatch(*args, **kwargs)

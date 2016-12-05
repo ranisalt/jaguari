@@ -1,149 +1,71 @@
+import json
 import os
 import responses
-from six.moves.urllib import request
-from unittest.mock import Mock
+import uuid
 from django.conf import settings
-from django.contrib.auth.models import User
-from django.http.request import HttpRequest
+from django.http import HttpRequest
 from django.test import Client, TestCase
 from .models import Order
 
 
-def resource(name: str):
-    return open(os.path.join(settings.BASE_DIR, 'tests', name), mode='rb')
+def resource(name: str, mode: str = 'r'):
+    return open(os.path.join(settings.BASE_DIR, 'tests', name), mode)
 
 
-degree = {
-    "codigo": 208,
-    "nome": "CIÊNCIAS DA COMPUTAÇÃO",
-    "centro": "CTC",
-    "permiteExtra": False,
-    "departamento": {
-        "codigo": "INE"
-    },
-    "situacao": {
-        "id": 0
-    },
-    "nomeCompleto": "Ciências da Computação",
-    "descricao": "O Curso de Ciências da Computação forma profissionais com "
-                 "capacidade para utilizar e desenvolver novas tecnologias. "
-                 "Nas primeiras fases, o currículo oferece disciplinas "
-                 "teóricas com os fundamentos da computação: Matemática, "
-                 "Eletrônica Geral, Sistemas Digitais, Redes de Computadores, "
-                 "Sistemas Operacionais, Engenharia de Software, Computação "
-                 "Gráfica e Programação.  \n \nO aluno estuda as tecnologias "
-                 "mais recentes em disciplinas optativas. Uma das "
-                 "peculiaridades do curso é a constante atualização do "
-                 "currículo. Isso ocorre porque sempre que há uma novidade na "
-                 "computação é criada uma optativa para que os estudantes "
-                 "conheçam essa nova tecnologia. Outras características são a "
-                 "grande quantidade de laboratórios e as numerosas pesquisas "
-                 "das quais os graduandos participam em conjunto com "
-                 "pós-graduandos.  \n \nTodos os alunos da UFSC têm acesso "
-                 "gratuito à Internet, mas os estudantes de Ciências da "
-                 "Computação têm vantagens: como dispõem de linhas especiais, "
-                 "o acesso é mais rápido. \n \nNo mercado de trabalho da "
-                 "área, nos próximos dez anos, não deve faltar emprego. "
-                 "Devido à carência de profissionais, várias empresas de todo "
-                 "o Brasil procuram os formandos da UFSC. A atuação se dá "
-                 "geralmente em empresas de desenvolvimento de novas "
-                 "tecnologias, telecomunicações, institutos de pesquisa e "
-                 "universidades. Os professores do curso alertam para um "
-                 "engano freqüente, confundir a função do bacharel em "
-                 "Ciências da Computação com as desempenhadas pelo bacharel "
-                 "em Sistemas de Informação. O profissional de Ciências da "
-                 "Computação produz e desenvolve novas tecnologias, "
-                 "como plataformas, software, interfaces. Quem é formado em "
-                 "Sistemas de Informação aplica as inovações tecnológicas já "
-                 "desenvolvidas. \n",
-    "semestreCorrente": 20162,
-    "campus": {
-        "id": 1,
-        "nome": "Campus Universitário  Reitor João David Ferreira Lima",
-        "sigla": "UFSC/FLO"
-    },
-    "numeroVagas": 400,
-    "numeroVagasPrimeiroSemestre": 50,
-    "repositorioTCC": "7444"
-}
+def mock_cagr() -> responses.RequestsMock:
+    r = responses.RequestsMock()
 
-student = [
-    {
-        "ativo": True,
-        "id": "13100000",
-        "idPessoa": 100000000400000,
-        "codigoVinculo": 1,
-        "nomeVinculo": "Aluno de Graduação",
-        "matricula": 13100000,
-        "codigoCurso": 208,
-        "nomeCurso": "CIÊNCIAS DA COMPUTAÇÃO",
-        "nome": "John Edward Gammell",
-        "dataNascimento": "1990-01-01T00:00:00-03:00",
-        "cpf": 26063723102,
-        "identidade": "389372869",
-        "codigoUfIdentidade": "SP",
-        "siglaOrgaoEmissorIdentidade": "SSP",
-        "codigoSituacao": 0,
-        "nomeSituacao": "regular"
-    }
-]
+    with resource('cursoGraduacaoAluno.json') as payload:
+        r.add(responses.GET,
+              'https://ws.ufsc.br/CAGRService/cursoGraduacaoAluno/13100000',
+              json=json.load(payload))
+
+    with resource('vinculosPessoaById.json') as payload:
+        r.add(responses.GET,
+              'https://ws.ufsc.br/CadastroPessoaService/vinculosPessoaById'
+              '/100000000400000',
+              json=json.load(payload))
+
+    return r
 
 
-class Requests(TestCase):
+class Orders(TestCase):
     def setUp(self):
-        request.urlopen = Mock(side_effect=[resource('login.xml')])
+        self.client = Client()
 
         req = HttpRequest()
         req.session = {}
-
-        self.client = Client()
-        self.client.login(ticket='ST-b91d310a-6d50-45a3-9a1c-1c36fa135ab3',
-                          service='http://localhost/?next=%2Forders%2Fnew%2F',
-                          request=req)
-
-        try:
-            self.user = User.objects.get()
-        except User.DoesNotExist:  # pragma: no cover
-            self.user = User.objects.create_user(username='100000000400000')
+        with responses.RequestsMock() as r, resource('login.xml', 'rb') as body:
+            r.add(responses.POST, 'https://sistemas.ufsc.br/samlValidate',
+                  body=body.read())
+            self.client.login(ticket='ST-{}'.format(uuid.uuid4()),
+                              service=settings.CAS_SERVER_URL,
+                              request=req)
 
     def test_new_order(self):
         self.assertEqual(Order.objects.count(), 0)
 
-        with responses.RequestsMock() as r:
-            r.add(responses.GET,
-                  'https://ws.ufsc.br/CAGRService/cursoGraduacaoAluno/13100000',
-                  json=degree)
-            r.add(responses.GET,
-                  'https://ws.ufsc.br/CadastroPessoaService'
-                  '/vinculosPessoaById/100000000400000',
-                  json=student)
+        with mock_cagr():
             self.client.get('/orders/new/', follow=True)
 
         self.assertEqual(Order.objects.count(), 1)
 
         order = Order.objects.get()
-        self.assertEqual(order.enrollment_number, student[0]['id'])
-        self.assertEqual(order.student.get_full_name(), student[0]['nome'])
+        self.assertEqual('13100000', order.enrollment_number)
+        self.assertEqual('John Edward Gammell', order.student.get_full_name())
 
         order = Order.objects.get()
-        self.assertEqual(order.student, self.user)
+        self.assertEqual(order.student.get_username(), '100000000400000')
 
     def test_post_order(self):
         self.assertEqual(Order.objects.count(), 0)
 
-        with responses.RequestsMock() as r:
-            r.add(responses.GET,
-                  'https://ws.ufsc.br/CAGRService/cursoGraduacaoAluno/13100000',
-                  json=degree)
-            r.add(responses.GET,
-                  'https://ws.ufsc.br/CadastroPessoaService'
-                  '/vinculosPessoaById/100000000400000',
-                  json=student)
+        with mock_cagr():
             self.client.get('/orders/new/', follow=True)
 
         self.assertEqual(Order.objects.count(), 1)
 
-        with resource('image.jpg') as picture:
+        with resource('image.jpg', 'rb') as picture:
             res = self.client.post('/orders/new/', {
                 'picture': picture
             })
