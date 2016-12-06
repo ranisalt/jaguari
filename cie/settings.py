@@ -145,7 +145,7 @@ CORS_ORIGIN_WHITELIST = ('https://sandbox.pagseguro.uol.com.br',)
 SECURE_REDIRECT_EXEMPT = 'orders/callback/'
 
 # Student database credentials
-CAGR_CREDENTIALS = ('', '')
+CAGR_KEY = ('', '')
 
 # CAS login configuration
 CAS_EXTRA_LOGIN_PARAMS = {
