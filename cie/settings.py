@@ -25,7 +25,7 @@ SECRET_KEY = ''
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['cie.dce.ufsc.br']
 
 
 # Application definition
@@ -133,7 +133,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-ALLOWED_HOSTS = ['cie.dce.ufsc.br']
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
