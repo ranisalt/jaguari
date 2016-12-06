@@ -114,7 +114,4 @@ class Order(models.Model):
     class Meta:
         ordering = ['-created_at']
 
-    def __repr__(self):
-        return self.use_code
-
     objects = OrderManager()
