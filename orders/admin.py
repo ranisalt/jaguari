@@ -9,4 +9,11 @@ class DegreeAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    pass
+    def picture_tag(self):
+        import os
+        from django.utils.safestring import mark_safe
+        return mark_safe('<img src="{}" />'.format(
+            os.path.join(settings.MEDIA_ROOT, self.picture)
+        ))
+
+    list_display = ['student', 'picture_tag']
