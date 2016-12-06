@@ -13,7 +13,8 @@ class DegreeManager(models.Manager):
     endpoint = 'https://ws.ufsc.br/CAGRService/cursoGraduacaoAluno/{}'
 
     def fetch(self, enrollment_hint):
-        response = requests.get(self.endpoint.format(enrollment_hint)).json()
+        response = requests.get(self.endpoint.format(enrollment_hint),
+                                auth=settings.CAGR_KEY).json()
 
         return self.update_or_create(
             id=response['codigo'],
@@ -59,8 +60,8 @@ class OrderManager(models.Manager):
             return ativo and codigoSituacao == 0 and codigoVinculo == 1
 
         response = requests.get(self.endpoint.format(user.get_username()),
-                                auth=settings.CAGR_CREDENTIALS)
-        *_, data = (link for link in response.json() if is_valid(**link))
+                                auth=settings.CAGR_KEY).json()
+        *_, data = (link for link in response if is_valid(**link))
 
         enrollment_number = data['matricula']
         degree, _ = Degree.objects.fetch(str(enrollment_number))
