@@ -1,3 +1,12 @@
 from django.contrib import admin
+from .models import Degree, Order
 
-# Register your models here.
+
+@admin.register(Degree)
+class DegreeAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    pass
