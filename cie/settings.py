@@ -140,10 +140,6 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # File upload configuration
 MEDIA_ROOT = os.path.join(BASE_DIR, 'upload')
 
-# CORS configuration
-CORS_ORIGIN_WHITELIST = ('https://sandbox.pagseguro.uol.com.br',)
-SECURE_REDIRECT_EXEMPT = 'orders/callback/'
-
 # Student database credentials
 CAGR_KEY = ('', '')
 
