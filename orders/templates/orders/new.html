@@ -20,51 +20,51 @@
           enctype="multipart/form-data">
       {% csrf_token %}
       <div class="form-group row">
-        <label for="display-name" class="col-sm-3">Nome</label>
-        <div class="col-sm-9">
+        <label for="display-name" class="col-sm-4">Nome</label>
+        <div class="col-sm-8">
           <p>{{ order.student.get_full_name }}</p>
         </div>
       </div>
       <div class="form-group row">
-        <label for="birthday" class="col-sm-3">Data de nascimento</label>
-        <div class="col-sm-9">
+        <label for="birthday" class="col-sm-4">Data de nascimento</label>
+        <div class="col-sm-8">
           <p>{{ order.birthday.isoformat }}</p>
         </div>
       </div>
       <div class="form-group row">
-        <label for="cpf" class="col-sm-3">CPF</label>
-        <div class="col-sm-9">
+        <label for="cpf" class="col-sm-4">CPF</label>
+        <div class="col-sm-8">
           <p>{{ order.cpf }}</p>
         </div>
       </div>
       <div class="form-group row">
-        <label for="identity-number" class="col-sm-3">RG</label>
-        <div class="col-sm-9">
+        <label for="identity-number" class="col-sm-4">RG</label>
+        <div class="col-sm-8">
           <p>{{ order.identity_number }} {{ order.identity_issuer }}/{{ order.identity_state }}</p>
         </div>
       </div>
       <div class="form-group row">
         <label for="enrollment-number"
-               class="col-sm-3">Matrícula</label>
-        <div class="col-sm-9">
+               class="col-sm-4">Matrícula</label>
+        <div class="col-sm-8">
           <p>{{ order.enrollment_number }}</p>
         </div>
       </div>
       <div class="form-group row">
-        <label for="degree-tier" class="col-sm-3">Grau de escolaridade</label>
-        <div class="col-sm-9">
+        <label for="degree-tier" class="col-sm-4">Grau de escolaridade</label>
+        <div class="col-sm-8">
           <p>{{ order.degree.get_tier_display }}</p>
         </div>
       </div>
       <div class="form-group row">
-        <label for="degree-name" class="col-sm-3">Nome do curso</label>
-        <div class="col-sm-9">
+        <label for="degree-name" class="col-sm-4">Nome do curso</label>
+        <div class="col-sm-8">
           <p>{{ order.degree.name }}</p>
         </div>
       </div>
       <div class="form-group row">
-        <label for="picture" class="col-sm-3">Foto</label>
-        <div class="col-sm-9">
+        <label for="picture" class="col-sm-4">Foto</label>
+        <div class="col-sm-8">
           <input type="file"
                  class="form-control-file"
                  id="picture"
@@ -77,7 +77,7 @@
         </div>
       </div>
       <div class="form-group row">
-        <div class="offset-sm-3 col-sm-9">
+        <div class="offset-sm-4 col-sm-8">
           <button type="submit" class="btn btn-primary">Finalizar pedido
           </button>
         </div>
