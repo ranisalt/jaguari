@@ -130,9 +130,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 STATIC_URL = '/static/'
 
+STATIC_URL = '/static/'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
