@@ -36,7 +36,7 @@ class Degree(models.Model):
     )
     id = models.IntegerField(primary_key=True)
     tier = models.SmallIntegerField(choices=DEGREE_LEVEL_CHOICES)
-    name = models.CharField(max_length=63)
+    name = models.CharField(max_length=127)
 
     objects = DegreeManager()
 
