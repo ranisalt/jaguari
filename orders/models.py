@@ -96,7 +96,7 @@ class Order(models.Model):
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    use_code = models.CharField(max_length=8, editable=False)
+    use_code = models.CharField(max_length=8)
     student = models.ForeignKey(User, on_delete=models.PROTECT, editable=False)
     degree = models.ForeignKey(Degree, on_delete=models.PROTECT, editable=False)
     birthday = models.DateField(editable=False)
