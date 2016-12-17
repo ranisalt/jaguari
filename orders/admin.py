@@ -14,6 +14,13 @@ class DegreeAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    actions = None
+    date_hierarchy = 'created_at'
+
+    def get_queryset(self, request):
+        qs = super(OrderAdmin, self).get_queryset(request)
+        return qs.exclude(picture='')
+
     def birthday_tag(self, obj: Order):
         return obj.birthday.strftime('%d/%m/%Y')
 
@@ -52,9 +59,11 @@ class OrderAdmin(admin.ModelAdmin):
                     os.path.join('/', settings.MEDIA_URL, obj.picture.url)
                 ))
 
+    picture_tag.empty_value_display = _('(none)')
     picture_tag.short_description = _('picture')
 
     list_display = ('name_tag', 'created_at', 'print_status')
+    list_filter = ('print_status',)
     fields = ('use_code',
               'name_tag',
               'birthday_tag',

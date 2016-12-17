@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-17 03:30-0200\n"
+"POT-Creation-Date: 2016-12-17 03:42-0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,32 +18,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: orders/admin.py:20
+#: orders/admin.py:23
 msgid "birthday"
 msgstr "data de nascimento"
 
-#: orders/admin.py:26
+#: orders/admin.py:29
 msgid "CPF"
 msgstr ""
 
-#: orders/admin.py:29
+#: orders/admin.py:32
 #, python-brace-format
 msgid "{tier} in {name}"
 msgstr "{tier} em {name}"
 
-#: orders/admin.py:32
+#: orders/admin.py:35
 msgid "academic degree"
 msgstr "grau de escolaridade"
 
-#: orders/admin.py:37 orders/models.py:40
+#: orders/admin.py:40 orders/models.py:40
 msgid "name"
 msgstr "nome"
 
-#: orders/admin.py:44
+#: orders/admin.py:47
 msgid "identity"
 msgstr "identidade"
 
-#: orders/admin.py:55
+#: orders/admin.py:58
+msgid "(none)"
+msgstr "(nenhum)"
+
+#: orders/admin.py:59
 msgid "picture"
 msgstr "foto"
 
