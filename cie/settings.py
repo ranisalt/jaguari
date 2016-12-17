@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = 'knmo&y7or4!sxfqab74_-923od*rih36f5!2=f_#x!t%pjkdoc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -83,14 +83,8 @@ WSGI_APPLICATION = 'cie.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_ALL_TABLES'",
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
 }
 
@@ -132,9 +126,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-
-STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 STATIC_URL = '/static/'
 
@@ -152,12 +144,12 @@ CAS_EXTRA_LOGIN_PARAMS = {
     'convertToUserType': 'alunoGraduacao',
     'lockUserType': '1',
 }
-CAS_SERVER_URL = ''
+CAS_SERVER_URL = 'https://sistemas.ufsc.br/'
 CAS_USERNAME_ATTRIBUTE = 'idPessoa'
 CAS_VERSION = 'CAS_2_SAML_1_0'
 
 # Payment gateway configuration
-PAGSEGURO_EMAIL = ''
+PAGSEGURO_EMAIL = 'dce@contato.ufsc.br'
 PAGSEGURO_TOKEN = ''
 PAGSEGURO_SANDBOX = True
 PAGSEGURO_LOG_IN_MODEL = True
