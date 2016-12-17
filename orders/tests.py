@@ -99,13 +99,18 @@ class Orders(TransactionTestCase):
         self.client.force_login(self.user)
 
         # force new order
-        with mock_cagr():
+        with mock_cagr() as r:
             self.client.get(reverse('order-new'))
 
-        with resource('image.jpg', 'rb') as picture:
-            response = self.client.post(reverse('order-new'), {
-                'picture': picture
-            })
+            with resource('checkout.xml') as payload:
+                r.add(responses.POST,
+                      'https://ws.sandbox.pagseguro.uol.com.br/v2/checkout',
+                      body=payload.read(), content_type='application/xml')
+
+            with resource('image.jpg', 'rb') as picture:
+                response = self.client.post(reverse('order-new'), {
+                    'picture': picture
+                })
 
         # ensure response is redirect to payment gateway
         self.assertEqual(302, response.status_code)
