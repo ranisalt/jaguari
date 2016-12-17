@@ -4,7 +4,7 @@ import responses
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import Client, TransactionTestCase, override_settings
-from .models import Order
+from .models import Degree, Order
 
 
 def resource(name: str, mode: str = 'r'):
@@ -42,14 +42,22 @@ class Orders(TransactionTestCase):
         with mock_cagr():
             response = self.client.get('/orders/new/')
 
-        # ensure response is OK status and order is created
+        # ensure response is OK status
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, 'orders/new.html')
+
+        # ensure degree is created with correct data
+        self.assertEqual(1, Degree.objects.count())
+
+        degree = Degree.objects.get()
+        self.assertEqual(Degree.UNDERGRADUATE, degree.tier)
+        self.assertEqual('Ciências da Computação', degree.name)
+        self.assertEqual(Degree.FLO, degree.campus)
+
+        # ensure order is created with correct data
         self.assertEqual(1, Order.objects.count())
 
         order = Order.objects.get()
-
-        # ensure order is created with correct data
         self.assertEqual('13100000', order.enrollment_number)
         self.assertEqual('John Edward Gammell', order.student.get_full_name())
         self.assertEqual('100000000400000', order.student.get_username())

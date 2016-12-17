@@ -8,8 +8,8 @@ from .models import Degree, Order
 
 @admin.register(Degree)
 class DegreeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'tier', 'name')
-    list_filter = ('tier',)
+    list_display = ('id', 'tier', 'name', 'campus')
+    list_filter = ('tier', 'campus')
 
 
 @admin.register(Order)
@@ -27,16 +27,10 @@ class OrderAdmin(admin.ModelAdmin):
     birthday_tag.short_description = _('birthday')
 
     def cpf_tag(self, obj: Order):
-        parts = (obj.cpf[i:i+3] for i in range(0, 11, 3))
+        parts = (obj.cpf[i:i + 3] for i in range(0, 11, 3))
         return '{}.{}.{}-{}'.format(*parts)
 
     cpf_tag.short_description = _('CPF')
-
-    def degree_tag(self, obj: Order):
-        return _('{tier} in {name}').format(tier=obj.degree.get_tier_display(),
-                                            name=obj.degree.name)
-
-    degree_tag.short_description = _('academic degree')
 
     def name_tag(self, obj: Order):
         return obj.student.get_full_name()
@@ -49,6 +43,14 @@ class OrderAdmin(admin.ModelAdmin):
                                  obj.identity_state)
 
     identity_tag.short_description = _('identity')
+
+    def degree_tag(self, obj: Order):
+        return _('{tier} in {name} ({campus})').format(
+            tier=obj.degree.get_tier_display(),
+            name=obj.degree.name,
+            campus=obj.degree.get_campus_display())
+
+    degree_tag.short_description = _('academic degree')
 
     picture_html = '<img src="{}" style="max-height:200px; max-width:200px;"/>'
 

@@ -21,6 +21,7 @@ class DegreeManager(models.Manager):
             id=response['codigo'],
             tier=Degree.UNDERGRADUATE,
             name=response['nomeCompleto'],
+            campus=response['campus']['id'],
         )
 
 
@@ -33,11 +34,26 @@ class Degree(models.Model):
         (UNDERGRADUATE, _('Undergraduate')),
         (POSTGRADUATE, _('Postgraduate')),
     )
+
+    FLO = 1
+    JOI = 2
+    CBS = 3
+    ARA = 4
+    BLN = 5
+    CAMPI_CHOICES = (
+        (FLO, 'Florianópolis'),
+        (JOI, 'Joinville'),
+        (CBS, 'Curitibanos'),
+        (ARA, 'Araranguá'),
+        (BLN, 'Blumenau'),
+    )
+
     id = models.IntegerField(primary_key=True, verbose_name=_('id'))
     tier = models.SmallIntegerField(blank=False,
                                     choices=DEGREE_LEVEL_CHOICES,
                                     verbose_name=_('tier'))
     name = models.CharField(max_length=127, verbose_name=_('name'))
+    campus = models.SmallIntegerField(choices=CAMPI_CHOICES)
 
     class Meta:
         verbose_name = _('degree')
