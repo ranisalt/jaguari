@@ -4,6 +4,7 @@ import responses
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import Client, TransactionTestCase, override_settings
+from django.urls import reverse
 from .models import Degree, Order
 
 
@@ -44,7 +45,7 @@ class Orders(TransactionTestCase):
         self.client.force_login(self.user)
 
         with mock_cagr():
-            response = self.client.get('/orders/new/')
+            response = self.client.get(reverse('order-new'))
 
         # ensure response is OK status
         self.assertEqual(200, response.status_code)
@@ -70,7 +71,7 @@ class Orders(TransactionTestCase):
         self.client.force_login(self.user)
 
         with mock_cagr(degree='cursoGraduacaoAluno-anotherCampus'):
-            response = self.client.get('/orders/new/')
+            response = self.client.get(reverse('order-new'))
 
         # ensure response is OK status
         self.assertEqual(200, response.status_code)
@@ -85,7 +86,7 @@ class Orders(TransactionTestCase):
         self.assertEqual(Degree.ARA, degree.campus)
 
     def test_new_order_without_login(self):
-        response = self.client.get('/orders/new/')
+        response = self.client.get(reverse('order-new'))
 
         # ensure response is redirect to login page
         self.assertEqual(302, response.status_code)
@@ -99,10 +100,10 @@ class Orders(TransactionTestCase):
 
         # force new order
         with mock_cagr():
-            self.client.get('/orders/new/')
+            self.client.get(reverse('order-new'))
 
         with resource('image.jpg', 'rb') as picture:
-            response = self.client.post('/orders/new/', {
+            response = self.client.post(reverse('order-new'), {
                 'picture': picture
             })
 
