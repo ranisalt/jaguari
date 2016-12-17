@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.dispatch import receiver
+from django.utils.translation import ugettext_lazy as _
 from django_cas_ng.signals import cas_user_authenticated
 from django_localflavor_br.br_states import STATE_CHOICES
 
@@ -26,13 +27,11 @@ class DegreeManager(models.Manager):
 class Degree(models.Model):
     HIGHER = 1
     UNDERGRADUATE = 2
-    MASTER = 3
-    DOCTOR = 4
+    POSTGRADUATE = 3
     DEGREE_LEVEL_CHOICES = (
-        (HIGHER, 'Ensino Médio'),
-        (UNDERGRADUATE, 'Graduação'),
-        (MASTER, 'Mestrado'),
-        (DOCTOR, 'Doutorado'),
+        (HIGHER, _('High school')),
+        (UNDERGRADUATE, _('Undergraduate')),
+        (POSTGRADUATE, _('Postgraduate')),
     )
     id = models.IntegerField(primary_key=True)
     tier = models.SmallIntegerField(choices=DEGREE_LEVEL_CHOICES)
@@ -90,9 +89,9 @@ class Order(models.Model):
     READY = 1
     DELIVERED = 2
     PRINT_STATUS_CHOICES = (
-        (NOT_READY, 'Aguardando'),
-        (READY, 'Impresso'),
-        (DELIVERED, 'Entregue'),
+        (NOT_READY, _('Waiting')),
+        (READY, _('Printed')),
+        (DELIVERED, _('Delivered')),
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
