@@ -8,7 +8,8 @@ from .models import Degree, Order
 
 @admin.register(Degree)
 class DegreeAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'tier', 'name')
+    list_filter = ('tier',)
 
 
 @admin.register(Order)
