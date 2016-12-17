@@ -65,7 +65,7 @@ class OrderAdmin(admin.ModelAdmin):
     picture_tag.short_description = _('picture')
 
     list_display = ('name_tag', 'created_at', 'print_status')
-    list_filter = ('print_status',)
+    list_filter = ('degree__tier', 'degree__campus', 'print_status')
     fields = ('use_code',
               'name_tag',
               'birthday_tag',
