@@ -11,15 +11,19 @@ def resource(name: str, mode: str = 'r'):
     return open(os.path.join(settings.BASE_DIR, 'tests', name), mode)
 
 
-def mock_cagr() -> responses.RequestsMock:
+json_file = '{}.json'.format
+
+
+def mock_cagr(degree='cursoGraduacaoAluno',
+              person='vinculosPessoaById') -> responses.RequestsMock:
     r = responses.RequestsMock()
 
-    with resource('cursoGraduacaoAluno.json') as payload:
+    with resource(json_file(degree)) as payload:
         r.add(responses.GET,
               'https://ws.ufsc.br/CAGRService/cursoGraduacaoAluno/13100000',
               json=json.load(payload))
 
-    with resource('vinculosPessoaById.json') as payload:
+    with resource(json_file(person)) as payload:
         r.add(responses.GET,
               'https://ws.ufsc.br/CadastroPessoaService/vinculosPessoaById'
               '/100000000400000',
@@ -61,6 +65,24 @@ class Orders(TransactionTestCase):
         self.assertEqual('13100000', order.enrollment_number)
         self.assertEqual('John Edward Gammell', order.student.get_full_name())
         self.assertEqual('100000000400000', order.student.get_username())
+
+    def test_new_order_another_campus(self):
+        self.client.force_login(self.user)
+
+        with mock_cagr(degree='cursoGraduacaoAluno-anotherCampus'):
+            response = self.client.get('/orders/new/')
+
+        # ensure response is OK status
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed(response, 'orders/new.html')
+
+        # ensure degree is created with correct data
+        self.assertEqual(1, Degree.objects.count())
+
+        degree = Degree.objects.get()
+        self.assertEqual(Degree.UNDERGRADUATE, degree.tier)
+        self.assertEqual('Engenharia de Computação', degree.name)
+        self.assertEqual(Degree.ARA, degree.campus)
 
     def test_new_order_without_login(self):
         response = self.client.get('/orders/new/')
