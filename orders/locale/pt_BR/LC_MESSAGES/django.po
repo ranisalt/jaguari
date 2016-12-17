@@ -1,0 +1,108 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-17 03:30-0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: orders/admin.py:20
+msgid "birthday"
+msgstr "data de nascimento"
+
+#: orders/admin.py:26
+msgid "CPF"
+msgstr ""
+
+#: orders/admin.py:29
+#, python-brace-format
+msgid "{tier} in {name}"
+msgstr "{tier} em {name}"
+
+#: orders/admin.py:32
+msgid "academic degree"
+msgstr "grau de escolaridade"
+
+#: orders/admin.py:37 orders/models.py:40
+msgid "name"
+msgstr "nome"
+
+#: orders/admin.py:44
+msgid "identity"
+msgstr "identidade"
+
+#: orders/admin.py:55
+msgid "picture"
+msgstr "foto"
+
+#: orders/apps.py:7
+msgid "Orders"
+msgstr "Pedidos"
+
+#: orders/models.py:32
+msgid "High school"
+msgstr "Ensino Médio"
+
+#: orders/models.py:33
+msgid "Undergraduate"
+msgstr "Graduação"
+
+#: orders/models.py:34
+msgid "Postgraduate"
+msgstr "Pós-graduação"
+
+#: orders/models.py:36
+msgid "id"
+msgstr "código"
+
+#: orders/models.py:39
+msgid "tier"
+msgstr "grau"
+
+#: orders/models.py:43
+msgid "degree"
+msgstr "curso"
+
+#: orders/models.py:97
+msgid "Waiting"
+msgstr "Aguardando"
+
+#: orders/models.py:98
+msgid "Printed"
+msgstr "Impresso"
+
+#: orders/models.py:99
+msgid "Delivered"
+msgstr "Entregue"
+
+#: orders/models.py:103
+msgid "use code"
+msgstr "código de uso"
+
+#: orders/models.py:114
+msgid "enrollment number"
+msgstr "matrícula"
+
+#: orders/models.py:118
+msgid "created at"
+msgstr "criado em"
+
+#: orders/models.py:121
+msgid "print status"
+msgstr "status da impressão"
+
+#: orders/models.py:125
+msgid "order"
+msgstr "pedido"

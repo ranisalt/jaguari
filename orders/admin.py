@@ -16,22 +16,31 @@ class OrderAdmin(admin.ModelAdmin):
     def birthday_tag(self, obj: Order):
         return obj.birthday.strftime('%d/%m/%Y')
 
+    birthday_tag.short_description = _('birthday')
+
     def cpf_tag(self, obj: Order):
         parts = (obj.cpf[i:i+3] for i in range(0, 11, 3))
         return '{}.{}.{}-{}'.format(*parts)
 
-    def degree_tag(self, obj: Order):
-        return '{} em {}'.format(obj.degree.get_tier_display(), obj.degree.name)
+    cpf_tag.short_description = _('CPF')
 
-    degree_tag.short_description = _('Academic degree')
+    def degree_tag(self, obj: Order):
+        return _('{tier} in {name}').format(tier=obj.degree.get_tier_display(),
+                                            name=obj.degree.name)
+
+    degree_tag.short_description = _('academic degree')
 
     def name_tag(self, obj: Order):
         return obj.student.get_full_name()
 
-    def identity(self, obj: Order):
+    name_tag.short_description = _('name')
+
+    def identity_tag(self, obj: Order):
         return '{} {}/{}'.format(obj.identity_number,
                                  obj.identity_issuer,
                                  obj.identity_state)
+
+    identity_tag.short_description = _('identity')
 
     picture_html = '<img src="{}" style="max-height:200px; max-width:200px;"/>'
 
@@ -42,12 +51,14 @@ class OrderAdmin(admin.ModelAdmin):
                     os.path.join('/', settings.MEDIA_URL, obj.picture.url)
                 ))
 
+    picture_tag.short_description = _('picture')
+
     list_display = ('name_tag', 'created_at', 'print_status')
     fields = ('use_code',
               'name_tag',
               'birthday_tag',
               'cpf_tag',
-              'identity',
+              'identity_tag',
               'enrollment_number',
               'degree_tag',
               'picture_tag',
@@ -55,7 +66,7 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields = ('name_tag',
                        'birthday_tag',
                        'cpf_tag',
-                       'identity',
+                       'identity_tag',
                        'enrollment_number',
                        'degree_tag',
                        'picture_tag')

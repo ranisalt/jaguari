@@ -33,9 +33,14 @@ class Degree(models.Model):
         (UNDERGRADUATE, _('Undergraduate')),
         (POSTGRADUATE, _('Postgraduate')),
     )
-    id = models.IntegerField(primary_key=True)
-    tier = models.SmallIntegerField(choices=DEGREE_LEVEL_CHOICES)
-    name = models.CharField(max_length=127)
+    id = models.IntegerField(primary_key=True, verbose_name=_('id'))
+    tier = models.SmallIntegerField(blank=False,
+                                    choices=DEGREE_LEVEL_CHOICES,
+                                    verbose_name=_('tier'))
+    name = models.CharField(max_length=127, verbose_name=_('name'))
+
+    class Meta:
+        verbose_name = _('degree')
 
     objects = DegreeManager()
 
@@ -95,7 +100,7 @@ class Order(models.Model):
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    use_code = models.CharField(max_length=8)
+    use_code = models.CharField(max_length=8, verbose_name=_('use code'))
     student = models.ForeignKey(User, on_delete=models.PROTECT, editable=False)
     degree = models.ForeignKey(Degree, on_delete=models.PROTECT, editable=False)
     birthday = models.DateField(editable=False)
@@ -105,13 +110,18 @@ class Order(models.Model):
     identity_state = models.CharField(choices=STATE_CHOICES,
                                       max_length=2,
                                       editable=False)
-    enrollment_number = models.TextField(editable=False)
+    enrollment_number = models.TextField(editable=False,
+                                         verbose_name=_('enrollment number'))
     picture = models.ImageField(blank=True, upload_to=picture_path)
-    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      editable=False,
+                                      verbose_name=_('created at'))
     print_status = models.SmallIntegerField(choices=PRINT_STATUS_CHOICES,
-                                            default=NOT_READY)
+                                            default=NOT_READY,
+                                            verbose_name=_('print status'))
 
     class Meta:
         ordering = ['-created_at']
+        verbose_name = _('order')
 
     objects = OrderManager()
