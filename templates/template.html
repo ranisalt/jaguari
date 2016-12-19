@@ -6,10 +6,18 @@
   {% block 'head-ext' %}{% endblock %}
 </head>
 <body>
-{% block 'content' %}{% endblock %}
+<div class="site-wrapper">
+  <div class="site-wrapper-inner">
+    <div class="cover-container">
+      {% include 'navbar.html' %}
 
-{% include 'footer.html' %}
+      {% block 'content' %}{% endblock %}
 
-{% block 'footer-ext' %}{% endblock %}
+      {% include 'footer.html' %}
+
+      {% block 'footer-ext' %}{% endblock %}
+    </div>
+  </div>
+</div>
 </body>
 </html>
