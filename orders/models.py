@@ -136,6 +136,24 @@ class Order(models.Model):
                                             default=NOT_READY,
                                             verbose_name=_('print status'))
 
+    def formatted_birthday(self):
+        return self.birthday.strftime('%d/%m/%Y')
+
+    def formatted_cpf(self):
+        parts = [self.cpf[i:i + 3] for i in range(0, 11, 3)]
+        return '{}.{}.{}-{}'.format(*parts)
+
+    def formatted_degree(self):
+        return _('{tier} in {name} ({campus})').format(
+            tier=self.degree.get_tier_display(),
+            name=self.degree.name,
+            campus=self.degree.get_campus_display())
+
+    def formatted_rg(self):
+        return '{} {}/{}'.format(self.identity_number,
+                                 self.identity_issuer,
+                                 self.identity_state)
+
     class Meta:
         ordering = ['-created_at']
         verbose_name = _('order')

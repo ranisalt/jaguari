@@ -28,19 +28,19 @@
       <div class="form-group row">
         <label for="birthday" class="col-sm-4">Data de nascimento</label>
         <div class="col-sm-8">
-          <p>{{ order.birthday.isoformat }}</p>
+          <p>{{ order.formatted_birthday }}</p>
         </div>
       </div>
       <div class="form-group row">
         <label for="cpf" class="col-sm-4">CPF</label>
         <div class="col-sm-8">
-          <p>{{ order.cpf }}</p>
+          <p>{{ order.formatted_cpf }}</p>
         </div>
       </div>
       <div class="form-group row">
         <label for="identity-number" class="col-sm-4">RG</label>
         <div class="col-sm-8">
-          <p>{{ order.identity_number }} {{ order.identity_issuer }}/{{ order.identity_state }}</p>
+          <p>{{ order.formatted_rg }}</p>
         </div>
       </div>
       <div class="form-group row">
@@ -51,15 +51,9 @@
         </div>
       </div>
       <div class="form-group row">
-        <label for="degree-tier" class="col-sm-4">Grau de escolaridade</label>
+        <label for="degree-tier" class="col-sm-4">Curso</label>
         <div class="col-sm-8">
-          <p>{{ order.degree.get_tier_display }}</p>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="degree-name" class="col-sm-4">Nome do curso</label>
-        <div class="col-sm-8">
-          <p>{{ order.degree.name }}</p>
+          <p>{{ order.formatted_degree }}</p>
         </div>
       </div>
       <div class="form-group row">
