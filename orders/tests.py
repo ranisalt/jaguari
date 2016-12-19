@@ -82,6 +82,7 @@ class Orders(TransactionTestCase):
         # ensure response is OK status
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, 'orders/new.html')
+        self.assertContains(response, 'Graduação em Engenharia de Computação')
 
         # ensure degree is created with correct data
         self.assertEqual(1, Degree.objects.count())

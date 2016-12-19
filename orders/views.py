@@ -39,7 +39,7 @@ class OrderCreateView(LoginRequiredMixin, View):
 
     def post(self, request):
         """Create new order"""
-        order = get_object_or_404(Order, pk=request.session['order'])
+        order = get_object_or_404(self.model, pk=request.session['order'])
         order.picture = request.FILES['picture']
         order.save()
 
