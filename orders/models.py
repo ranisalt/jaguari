@@ -115,17 +115,17 @@ class Order(models.Model):
         (DELIVERED, _('Delivered')),
     )
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
     use_code = models.CharField(max_length=8, verbose_name=_('use code'))
-    student = models.ForeignKey(User, on_delete=models.PROTECT, editable=False)
-    degree = models.ForeignKey(Degree, on_delete=models.PROTECT, editable=False)
+    student = models.ForeignKey(User, editable=False, on_delete=models.PROTECT)
+    degree = models.ForeignKey(Degree, editable=False, on_delete=models.PROTECT)
     birthday = models.DateField(editable=False)
     cpf = models.CharField(max_length=11, editable=False)
     identity_number = models.TextField(editable=False)
     identity_issuer = models.TextField(editable=False)
     identity_state = models.CharField(choices=STATE_CHOICES,
-                                      max_length=2,
-                                      editable=False)
+                                      editable=False,
+                                      max_length=2)
     enrollment_number = models.TextField(editable=False,
                                          verbose_name=_('enrollment number'))
     picture = models.ImageField(blank=True, upload_to=picture_path)
