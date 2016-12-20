@@ -70,8 +70,7 @@ class Orders(TransactionTestCase):
 
         order = Order.objects.get()
         self.assertEqual('13100000', order.enrollment_number)
-        self.assertEqual('John Edward Gammell', order.student.get_full_name())
-        self.assertEqual('100000000400000', order.student.get_username())
+        self.assertEqual(self.user, order.student)
 
     def test_new_order_another_campus(self):
         self.client.force_login(self.user)
