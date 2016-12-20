@@ -5,13 +5,31 @@
   <link rel="stylesheet" href="{% static 'cie.css' %}">
 {% endblock %}
 
+{% block 'navbar' %}
+  <div class="masthead">
+    <div class="inner">
+      <h3 class="masthead-brand" href="{% url 'home' %}">DCE Luis Travassos</h3>
+      <nav class="nav nav-masthead">
+        {% if user.is_authenticated %}
+          <a class="nav-link" href="{% url 'orders' %}">Pedidos</a>
+          <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+        {% else %}
+          <a class="nav-link" href="{% url 'login' %}">Login</a>
+        {% endif %}
+      </nav>
+    </div>
+  </div>
+{% endblock %}
+
 {% block 'content' %}
   <div class="inner cover">
     <h1 class="cover-heading">Carteira de Estudante</h1>
     <p class="lead">
-      Um textinho batuta explicando como funciona a meia
-      entrada e a nova carteira de estudante, talvez até
-      falando quanto custa.
+      De acordo com a Lei 12.933/2013, o documento que comprova o seu vínculo
+      estudantil e garante seu direito deve seguir um padrão nacional e uma
+      série de critérios de identificação e segurança, que será produzido agora
+      pelo DCE da UFSC para você por um preço mais acessível e com prazo de
+      entrega muito mais rápido!
     </p>
     <p class="lead">
       <a class="btn btn-lg btn-secondary" href="{% url 'order-new' %}">

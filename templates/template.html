@@ -9,7 +9,7 @@
 <div class="site-wrapper">
   <div class="site-wrapper-inner">
     <div class="cover-container">
-      {% include 'navbar.html' %}
+      {% block 'navbar' %}{% include 'navbar.html' %}{% endblock %}
 
       {% block 'content' %}{% endblock %}
 
