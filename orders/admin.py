@@ -42,7 +42,7 @@ class OrderAdmin(admin.ModelAdmin):
     identity_tag.short_description = _('identity')
 
     def degree_tag(self, obj: Order):
-        obj.formatted_degree()
+        return obj.formatted_degree()
 
     degree_tag.short_description = _('academic degree')
 
