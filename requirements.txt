@@ -5,4 +5,5 @@ django-pagseguro2>=1.1.1
 iso8601>=0.1.11
 mysqlclient>=1.3.9
 pillow>=3.4.2
+pytz>=2016.10
 requests>=2.12.1
