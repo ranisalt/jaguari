@@ -1,9 +1,10 @@
+import datetime
 import json
 import os
 import responses
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.test import Client, TransactionTestCase, override_settings
+from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 from .models import Degree, Order
 
@@ -34,9 +35,8 @@ def mock_cagr(degree='cursoGraduacaoAluno',
 
 
 @override_settings(MEDIA_ROOT='/tmp/upload', PAGSEGURO_SANDBOX=True)
-class Orders(TransactionTestCase):
+class Orders(TestCase):
     def setUp(self):
-        self.client = Client()
         self.user = User.objects.create_user(username='100000000400000',
                                              first_name='John',
                                              last_name='Edward Gammell')
@@ -50,27 +50,27 @@ class Orders(TransactionTestCase):
         # ensure response is OK status
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, 'orders/new.html')
-        self.assertContains(response, 'John Edward Gammell')
-        self.assertContains(response, '01/01/1990')
-        self.assertContains(response, '260.637.231-02')
-        self.assertContains(response, '389372869 SSP/SP')
-        self.assertContains(response, '13100000')
-        self.assertContains(response, 'Graduação em Ciências da Computação')
-
-        # ensure degree is created with correct data
-        self.assertEqual(1, Degree.objects.count())
-
-        degree = Degree.objects.get()
-        self.assertEqual(Degree.UNDERGRADUATE, degree.tier)
-        self.assertEqual('Ciências da Computação', degree.name)
-        self.assertEqual(Degree.FLO, degree.campus)
 
         # ensure order is created with correct data
         self.assertEqual(1, Order.objects.count())
 
-        order = Order.objects.get()
-        self.assertEqual('13100000', order.enrollment_number)
+        order = response.context['order']
+        self.assertEqual(self.client.session['order'], str(order.pk))
         self.assertEqual(self.user, order.student)
+        self.assertEqual(datetime.date(1990, 1, 1), order.birthday)
+        self.assertEqual('26063723102', order.cpf)
+        self.assertEqual('389372869', order.identity_number)
+        self.assertEqual('SSP', order.identity_issuer)
+        self.assertEqual('SP', order.identity_state)
+        self.assertEqual(13100000, order.enrollment_number)
+
+        # ensure degree is created with correct data
+        self.assertEqual(1, Degree.objects.count())
+
+        degree = order.degree
+        self.assertEqual(Degree.UNDERGRADUATE, degree.tier)
+        self.assertEqual('Ciências da Computação', degree.name)
+        self.assertEqual(Degree.FLO, degree.campus)
 
     def test_new_order_another_campus(self):
         self.client.force_login(self.user)
@@ -81,12 +81,11 @@ class Orders(TransactionTestCase):
         # ensure response is OK status
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, 'orders/new.html')
-        self.assertContains(response, 'Graduação em Engenharia de Computação')
 
         # ensure degree is created with correct data
         self.assertEqual(1, Degree.objects.count())
 
-        degree = Degree.objects.get()
+        degree = response.context['order'].degree
         self.assertEqual(Degree.UNDERGRADUATE, degree.tier)
         self.assertEqual('Engenharia de Computação', degree.name)
         self.assertEqual(Degree.ARA, degree.campus)
@@ -95,8 +94,9 @@ class Orders(TransactionTestCase):
         response = self.client.get(reverse('order-new'))
 
         # ensure response is redirect to login page
-        self.assertEqual(302, response.status_code)
-        self.assertRegex(response.url, r'^/accounts/login/')
+        self.assertRedirects(response,
+                             '/accounts/login/?next=/orders/new/',
+                             fetch_redirect_response=False)
 
         # ensure order is not created
         self.assertEqual(0, Order.objects.count())
@@ -111,7 +111,8 @@ class Orders(TransactionTestCase):
             with resource('checkout.xml') as payload:
                 r.add(responses.POST,
                       'https://ws.sandbox.pagseguro.uol.com.br/v2/checkout',
-                      body=payload.read(), content_type='application/xml')
+                      body=payload.read(),
+                      content_type='application/xml')
 
             with resource('image.jpg', 'rb') as picture:
                 response = self.client.post(reverse('order-new'), {
@@ -119,7 +120,6 @@ class Orders(TransactionTestCase):
                 })
 
         # ensure response is redirect to payment gateway
-        self.assertEqual(302, response.status_code)
-        self.assertRegex(response.url,
-                         r'^https://sandbox\.pagseguro\.uol\.com\.br/v2'
-                         r'/checkout/payment\.html\?code=\w+$')
+        self.assertRedirects(response,
+                             'https://sandbox.pagseguro.uol.com.br/v2/checkout/payment.html?code=00000000000000000000000000000000',
+                             fetch_redirect_response=False)
