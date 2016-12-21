@@ -10,10 +10,10 @@ class OrdersView(LoginRequiredMixin, View):
 
     def get(self, request):
         """Index of user orders"""
-        pass
-
-    def get_queryset(self):
-        return self.model.objects.filter(student=self.request.user)
+        queryset = self.model.objects.filter(student=self.request.user)
+        return render(request, 'orders/index.html', {
+            'orders': queryset
+        })
 
 
 class OrderDetailView(View):
@@ -22,9 +22,6 @@ class OrderDetailView(View):
     def get(self, request):
         """Show a single order"""
         pass
-
-    def get_queryset(self):
-        return self.model.objects.filter(pk=self.request.session['order'])
 
 
 class OrderCreateView(LoginRequiredMixin, View):
