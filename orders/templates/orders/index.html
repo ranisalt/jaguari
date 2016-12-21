@@ -1,0 +1,105 @@
+{% extends 'template.html' %}
+
+{% block 'head-ext' %}
+  {% load static %}
+
+  <style>
+    .container {
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
+
+    .cie {
+      background: url('{% static 'orders/cie.png' %}') no-repeat;
+      background-size: cover;
+      color: black;
+      font: 2.5mm/1.15em 'Arial', sans-serif;
+      height: 54mm;
+      margin: 3rem auto;
+      position: relative;
+      text-align: left;
+      width: 86mm;
+    }
+
+    .cie .cie-picture {
+      height: 30.5mm;
+      left: 4mm;
+      position: absolute;
+      top: 10.25mm;
+      width: 24.5mm;
+    }
+
+    .cie .cie-name {
+      left: 29.5mm;
+      position: absolute;
+      top: 13mm;
+    }
+
+    .cie .cie-degree {
+      left: 29.5mm;
+      position: absolute;
+      top: 20.5mm;
+    }
+
+    .cie .cie-details {
+      left: 39mm;
+      position: absolute;
+      top: 30.25mm;
+    }
+
+    .cie .cie-use-code {
+      font-weight: bold;
+      left: 39.25mm;
+      position: absolute;
+      text-align: center;
+      top: 45.9mm;
+      width: 20.25mm;
+    }
+
+    .cie .cie-year {
+      font-size: 4.5mm;
+      font-weight: bold;
+      left: 67.5mm;
+      position: absolute;
+      text-align: center;
+      top: 45.5mm;
+      width: 11mm;
+    }
+  </style>
+{% endblock %}
+
+{% block 'content' %}
+  <div class="container">
+    <h1>Seus pedidos</h1>
+    {% for order in orders %}
+      <div class="cie">
+        <img class="cie-picture" src="{{ order.picture.url }}"/>
+        <p class="cie-name">{{ order.student.get_full_name }}</p>
+        <p class="cie-degree">
+          Universidade Federal de Santa Catarina
+          <br/>
+          {{ order.degree.get_tier_display }}
+          <br/>
+          {{ order.degree.name }}
+        </p>
+        <p class="cie-details">
+          {{ order.formatted_birthday }}
+          <br/>
+          {{ order.formatted_rg }}
+          <br/>
+          {{ order.formatted_cpf }}
+        </p>
+        {% if order.use_code %}
+          <div class="cie-qr-code">{{ order.qr_code }}</div>
+          <div class="cie-use-code">{{ order.use_code }}</div>
+        {% endif %}
+        <div class="cie-year">{{ order.created_at.year }}</div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
+
+{% block 'footer-ext' %}
+  {% load staticfiles %}
+  <script src="{% static 'cie.js' %}"></script>
+{% endblock %}
