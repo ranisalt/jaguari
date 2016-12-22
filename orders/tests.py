@@ -1,118 +1,88 @@
-import datetime
-import json
+import iso8601
 import os
+import random
 import responses
 from django.conf import settings
-from django.contrib.auth.models import User
-from django.test import Client, TestCase, override_settings
+from django.test import TestCase, override_settings
 from django.urls import reverse
-from .models import Degree, Order
+from .factories import DegreeJSONFactory, OrderFactory, StudentJSONFactory, \
+    UserFactory
+from .models import Degree
 
 
 def resource(name: str, mode: str = 'r'):
-    return open(os.path.join(settings.BASE_DIR, 'tests', name), mode)
+    return open(os.path.join(settings.BASE_DIR, 'fixtures', name), mode)
 
 
-json_file = '{}.json'.format
-
-
-def mock_cagr(degree='cursoGraduacaoAluno',
-              person='vinculosPessoaById') -> responses.RequestsMock:
-    r = responses.RequestsMock()
-
-    with resource(json_file(degree)) as payload:
-        r.add(responses.GET,
-              'https://ws.ufsc.br/CAGRService/cursoGraduacaoAluno/13100000',
-              json=json.load(payload))
-
-    with resource(json_file(person)) as payload:
-        r.add(responses.GET,
-              'https://ws.ufsc.br/CadastroPessoaService/vinculosPessoaById'
-              '/100000000400000',
-              json=json.load(payload))
-
-    return r
+def ws(*args):
+    return 'https://ws.ufsc.br/{}'.format('/'.join(args))
 
 
 @override_settings(MEDIA_ROOT='/tmp/upload', PAGSEGURO_SANDBOX=True)
 class Orders(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='100000000400000',
-                                             first_name='John',
-                                             last_name='Edward Gammell')
+        self.responses = responses.RequestsMock()
+        self.responses.__enter__()
 
-    def test_new_order(self):
+        self.user = UserFactory()
         self.client.force_login(self.user)
 
-        with mock_cagr():
-            response = self.client.get(reverse('order-new'))
+        self.order = OrderFactory(student=self.user)
+
+    def test_new_order(self):
+        student_json = StudentJSONFactory.build(ativo=True)
+
+        degree_json = DegreeJSONFactory.build()
+        self.responses.add(
+            method=responses.GET,
+            url=ws('CAGRService', 'cursoGraduacaoAluno', student_json['id']),
+            json=degree_json)
+
+        links_json = StudentJSONFactory.build_batch(random.randrange(3))
+        links_json.append(student_json)
+        self.responses.add(
+            method=responses.GET,
+            url=ws('CadastroPessoaService',
+                   'vinculosPessoaById',
+                   self.user.username),
+            json=links_json)
+
+        response = self.client.get(reverse('order-new'))
 
         # ensure response is OK status
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, 'orders/new.html')
-
-        # ensure order is created with correct data
-        self.assertEqual(1, Order.objects.count())
 
         order = response.context['order']
         self.assertEqual(self.client.session['order'], str(order.pk))
         self.assertEqual(self.user, order.student)
-        self.assertEqual(datetime.date(1990, 1, 1), order.birthday)
-        self.assertEqual('26063723102', order.cpf)
-        self.assertEqual('389372869', order.identity_number)
-        self.assertEqual('SSP', order.identity_issuer)
-        self.assertEqual('SP', order.identity_state)
-        self.assertEqual(13100000, order.enrollment_number)
-
-        # ensure degree is created with correct data
-        self.assertEqual(1, Degree.objects.count())
+        self.assertEqual(
+            iso8601.parse_date(student_json['dataNascimento']).date(),
+            order.birthday)
+        self.assertEqual(str(student_json['cpf']), order.cpf)
+        self.assertEqual(student_json['identidade'], order.identity_number)
+        self.assertEqual(student_json['siglaOrgaoEmissorIdentidade'],
+                         order.identity_issuer)
+        self.assertEqual(student_json['codigoUfIdentidade'],
+                         order.identity_state)
+        self.assertEqual(student_json['matricula'], order.enrollment_number)
 
         degree = order.degree
         self.assertEqual(Degree.UNDERGRADUATE, degree.tier)
-        self.assertEqual('Ciências da Computação', degree.name)
-        self.assertEqual(Degree.FLO, degree.campus)
-
-    def test_new_order_another_campus(self):
-        self.client.force_login(self.user)
-
-        with mock_cagr(degree='cursoGraduacaoAluno-anotherCampus'):
-            response = self.client.get(reverse('order-new'))
-
-        # ensure response is OK status
-        self.assertEqual(200, response.status_code)
-        self.assertTemplateUsed(response, 'orders/new.html')
-
-        # ensure degree is created with correct data
-        self.assertEqual(1, Degree.objects.count())
-
-        degree = response.context['order'].degree
-        self.assertEqual(Degree.UNDERGRADUATE, degree.tier)
-        self.assertEqual('Engenharia de Computação', degree.name)
-        self.assertEqual(Degree.ARA, degree.campus)
-
-    def test_new_order_without_login(self):
-        response = self.client.get(reverse('order-new'))
-
-        # ensure response is redirect to login page
-        self.assertRedirects(response,
-                             '/accounts/login/?next=/orders/new/',
-                             fetch_redirect_response=False)
-
-        # ensure order is not created
-        self.assertEqual(0, Order.objects.count())
+        self.assertEqual(degree_json['nomeCompleto'], degree.name)
+        self.assertEqual(degree_json['campus']['id'], degree.campus)
 
     def test_post_new_order(self):
-        self.client.force_login(self.user)
+        session = self.client.session
+        session['order'] = str(self.order.pk)
+        session.save()
 
-        # force new order
-        with mock_cagr() as r:
-            self.client.get(reverse('order-new'))
-
-            with resource('checkout.xml') as payload:
-                r.add(responses.POST,
-                      'https://ws.sandbox.pagseguro.uol.com.br/v2/checkout',
-                      body=payload.read(),
-                      content_type='application/xml')
+        with resource('checkout.xml') as payload:
+            self.responses.add(
+                method=responses.POST,
+                url='https://ws.sandbox.pagseguro.uol.com.br/v2/checkout',
+                body=payload.read(),
+                content_type='application/xml')
 
             with resource('image.jpg', 'rb') as picture:
                 response = self.client.post(reverse('order-new'), {
@@ -123,3 +93,6 @@ class Orders(TestCase):
         self.assertRedirects(response,
                              'https://sandbox.pagseguro.uol.com.br/v2/checkout/payment.html?code=00000000000000000000000000000000',
                              fetch_redirect_response=False)
+
+    def tearDown(self):
+        self.responses.__exit__()

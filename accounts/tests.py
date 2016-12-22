@@ -8,7 +8,7 @@ from django.test import Client, TestCase
 
 
 def resource(name: str, mode: str = 'r'):
-    return open(os.path.join(settings.BASE_DIR, 'tests', name), mode)
+    return open(os.path.join(settings.BASE_DIR, 'fixtures', name), mode)
 
 
 class Accounts(TestCase):
