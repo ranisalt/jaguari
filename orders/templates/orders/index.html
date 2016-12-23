@@ -73,7 +73,9 @@
     <h1>Seus pedidos</h1>
     {% for order in orders %}
       <div class="cie">
-        <img class="cie-picture" src="{{ order.picture.url }}"/>
+        {% if order.picture %}
+          <img class="cie-picture" src="{{ order.picture.url }}"/>
+        {% endif %}
         <p class="cie-name">{{ order.student.get_full_name }}</p>
         <p class="cie-degree">
           Universidade Federal de Santa Catarina
