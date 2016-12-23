@@ -27,7 +27,19 @@ class Orders(TestCase):
         self.user = UserFactory()
         self.client.force_login(self.user)
 
-        self.order = OrderFactory(student=self.user)
+    def test_list_orders(self):
+        OrderFactory.create_batch(5)
+        OrderFactory.create_batch(5, student=self.user)
+
+        response = self.client.get(reverse('orders'))
+        self.assertTemplateUsed(response, 'orders/index.html')
+
+        orders = response.context['orders']
+
+        # users should see all anf only their orders
+        self.assertEqual(5, orders.count())
+        for order in orders:
+            self.assertEqual(self.user, order.student)
 
     def test_new_order(self):
         student_json = StudentJSONFactory.build(ativo=True)
@@ -73,8 +85,10 @@ class Orders(TestCase):
         self.assertEqual(degree_json['campus']['id'], degree.campus)
 
     def test_post_new_order(self):
+        order = OrderFactory(student=self.user)
+
         session = self.client.session
-        session['order'] = str(self.order.pk)
+        session['order'] = str(order.pk)
         session.save()
 
         with resource('checkout.xml') as payload:

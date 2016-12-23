@@ -52,8 +52,13 @@ class OrderFactory(factory.django.DjangoModelFactory):
         model = Order
 
     student = factory.SubFactory(UserFactory)
-    birthday = factory.Faker('date_object')
     degree = factory.SubFactory(DegreeFactory)
+    birthday = factory.Faker('date_object')
+    cpf = factory.Faker('random_number', digits=11)
+    identity_number = factory.Faker('numerify', text='#######')
+    identity_issuer = 'SC'
+    identity_state = 'SSP'
+    enrollment_number = factory.Faker('numerify', text='151#####')
 
 
 class StudentJSONFactory(factory.Factory):
