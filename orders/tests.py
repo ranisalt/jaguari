@@ -3,7 +3,7 @@ import os
 import random
 import responses
 from django.conf import settings
-from django.test import TestCase, override_settings
+from django.test import TransactionTestCase, override_settings
 from django.urls import reverse
 from .factories import DegreeJSONFactory, OrderFactory, StudentJSONFactory, \
     UserFactory
@@ -19,7 +19,7 @@ def ws(*args):
 
 
 @override_settings(MEDIA_ROOT='/tmp/upload', PAGSEGURO_SANDBOX=True)
-class Orders(TestCase):
+class Orders(TransactionTestCase):
     def setUp(self):
         self.responses = responses.RequestsMock()
         self.responses.__enter__()
