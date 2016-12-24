@@ -1,7 +1,7 @@
 {% extends 'template.html' %}
 
-{% block 'head-ext' %}
-  <style>
+{% block 'stylesheets' %}
+  <style type="text/x-scss">
     body {
       padding-top: 3rem;
     }
@@ -80,7 +80,7 @@
   </div>
 {% endblock %}
 
-{% block 'footer-ext' %}
+{% block 'scripts' %}
   {% load staticfiles %}
   <script src="{% static 'cie.js' %}"></script>
 {% endblock %}

@@ -1,9 +1,12 @@
+{% load compress %}
 <!doctype html>
 <html lang="en">
 <head>
   {% include 'head.html' %}
 
-  {% block 'head-ext' %}{% endblock %}
+  {% compress css %}
+    {% block 'stylesheets' %}{% endblock %}
+  {% endcompress %}
 </head>
 <body>
 <div class="site-wrapper">
@@ -15,7 +18,9 @@
 
       {% include 'footer.html' %}
 
-      {% block 'footer-ext' %}{% endblock %}
+      {% compress js %}
+        {% block 'scripts' %}{% endblock %}
+      {% endcompress %}
     </div>
   </div>
 </div>

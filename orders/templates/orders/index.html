@@ -1,9 +1,9 @@
 {% extends 'template.html' %}
 
-{% block 'head-ext' %}
+{% block 'stylesheets' %}
   {% load static %}
 
-  <style>
+  <style type="text/x-scss">
     .container {
       padding: 3rem 1.5rem;
       text-align: center;
@@ -19,9 +19,8 @@
       position: relative;
       text-align: left;
       width: 86mm;
-    }
 
-    .cie .cie-picture {
+    .cie-picture {
       height: 30.5mm;
       left: 4mm;
       position: absolute;
@@ -29,25 +28,25 @@
       width: 24.5mm;
     }
 
-    .cie .cie-name {
+    .cie-name {
       left: 29.5mm;
       position: absolute;
       top: 13mm;
     }
 
-    .cie .cie-degree {
+    .cie-degree {
       left: 29.5mm;
       position: absolute;
       top: 20.5mm;
     }
 
-    .cie .cie-details {
+    .cie-details {
       left: 39mm;
       position: absolute;
       top: 30.25mm;
     }
 
-    .cie .cie-use-code {
+    .cie-use-code {
       font-weight: bold;
       left: 39.25mm;
       position: absolute;
@@ -56,7 +55,7 @@
       width: 20.25mm;
     }
 
-    .cie .cie-year {
+    .cie-year {
       font-size: 4.5mm;
       font-weight: bold;
       left: 67.5mm;
@@ -64,6 +63,8 @@
       text-align: center;
       top: 45.5mm;
       width: 11mm;
+    }
+
     }
   </style>
 {% endblock %}
@@ -101,7 +102,7 @@
   </div>
 {% endblock %}
 
-{% block 'footer-ext' %}
+{% block 'scripts' %}
   {% load staticfiles %}
   <script src="{% static 'cie.js' %}"></script>
 {% endblock %}
