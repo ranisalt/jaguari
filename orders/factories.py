@@ -31,20 +31,10 @@ class DegreeJSONFactory(factory.Factory):
         model = dict
 
     codigo = factory.Faker('random_number', digits=3)
-    nome = factory.LazyAttribute(lambda o: o.nomeCompleto.upper())
-    centro = 'CTC'
-    permiteExtra = False
-    departamento = factory.Dict({'codigo': 'INE'})
-    situacao = factory.Dict({'id': 0})
     nomeCompleto = factory.Faker('company')
-    descricao = factory.Faker('text')
-    semestreCorrente = 20162
     campus = factory.Dict({
         'id': factory.Iterator(x for (x, _) in Degree.CAMPI_CHOICES),
     })
-    numeroVagas = factory.Faker('random_int', min=100, max=400)
-    numeroVagasPrimeiroSemestre = factory.Faker('random_int', min=20, max=100)
-    repositorioTCC = factory.Faker('numerify', text='####')
 
 
 class OrderFactory(factory.django.DjangoModelFactory):
