@@ -4,14 +4,14 @@ import uuid
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.http import HttpRequest
-from django.test import Client, TestCase
+from django.test import Client, TransactionTestCase
 
 
 def resource(name: str, mode: str = 'r'):
     return open(os.path.join(settings.BASE_DIR, 'fixtures', name), mode)
 
 
-class Accounts(TestCase):
+class Accounts(TransactionTestCase):
     def setUp(self):
         self.client = Client()
 
