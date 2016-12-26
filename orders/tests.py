@@ -31,7 +31,7 @@ class Orders(TransactionTestCase):
         OrderFactory.create_batch(5)
         OrderFactory.create_batch(5, student=self.user)
 
-        response = self.client.get(reverse('orders'))
+        response = self.client.get(reverse('orders:index'))
         self.assertTemplateUsed(response, 'orders/order_list.html')
 
         orders = response.context['object_list']
@@ -44,7 +44,7 @@ class Orders(TransactionTestCase):
     def test_detail_order(self):
         order = OrderFactory(student=self.user)
 
-        response = self.client.get(reverse('order-detail', kwargs={
+        response = self.client.get(reverse('orders:detail', kwargs={
             'pk': str(order.pk),
         }))
         self.assertTemplateUsed(response, 'orders/order_detail.html')
@@ -76,7 +76,7 @@ class Orders(TransactionTestCase):
                    self.user.username),
             json=links_json)
 
-        response = self.client.get(reverse('order-new'))
+        response = self.client.get(reverse('orders:create'))
 
         # ensure response is OK status
         self.assertEqual(200, response.status_code)
@@ -116,7 +116,7 @@ class Orders(TransactionTestCase):
                 content_type='application/xml')
 
             with resource('image.jpg', 'rb') as picture:
-                response = self.client.post(reverse('order-new'), {
+                response = self.client.post(reverse('orders:create'), {
                     'picture': picture
                 })
 
