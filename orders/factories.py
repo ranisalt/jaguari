@@ -51,7 +51,7 @@ class OrderFactory(factory.django.DjangoModelFactory):
     enrollment_number = factory.Faker('numerify', text='151#####')
 
 
-class StudentJSONFactory(factory.Factory):
+class OrderJSONFactory(factory.Factory):
     class Meta:
         model = dict
 
