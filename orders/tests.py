@@ -5,7 +5,7 @@ import responses
 from django.conf import settings
 from django.test import TransactionTestCase, override_settings
 from django.urls import reverse
-from .factories import DegreeJSONFactory, OrderFactory, StudentJSONFactory, \
+from .factories import DegreeJSONFactory, OrderFactory, OrderJSONFactory, \
     UserFactory
 from .models import Degree
 
@@ -59,7 +59,7 @@ class Orders(TransactionTestCase):
         self.assertEqual(object.enrollment_number, order.enrollment_number)
 
     def test_new_order(self):
-        student_json = StudentJSONFactory.build(ativo=True)
+        student_json = OrderJSONFactory.build(ativo=True)
 
         degree_json = DegreeJSONFactory.build()
         self.responses.add(
@@ -67,7 +67,7 @@ class Orders(TransactionTestCase):
             url=ws('CAGRService', 'cursoGraduacaoAluno', student_json['id']),
             json=degree_json)
 
-        links_json = StudentJSONFactory.build_batch(random.randrange(3))
+        links_json = OrderJSONFactory.build_batch(random.randrange(3))
         links_json.append(student_json)
         self.responses.add(
             method=responses.GET,
