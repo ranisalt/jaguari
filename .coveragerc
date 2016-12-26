@@ -1,5 +1,7 @@
 [run]
 branch = True
 omit =
+    manage.py
+    */admin.py
     */migrations/*
     */site-packages/*
