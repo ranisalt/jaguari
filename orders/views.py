@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import ListView, View
+from django.views.generic import DetailView, ListView, View
 from pagseguro.api import PagSeguroApi, PagSeguroItem
 from .models import Order
 
@@ -13,12 +13,8 @@ class OrdersView(LoginRequiredMixin, ListView):
         return self.model.objects.filter(student=self.request.user)
 
 
-class OrderDetailView(View):
+class OrderDetailView(LoginRequiredMixin, DetailView):
     model = Order
-
-    def get(self, request: HttpRequest) -> HttpResponse:
-        """Show a single order"""
-        pass
 
 
 class OrderCreateView(LoginRequiredMixin, View):
