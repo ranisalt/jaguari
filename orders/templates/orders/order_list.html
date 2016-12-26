@@ -72,7 +72,7 @@
 {% block 'content' %}
   <div class="container">
     <h1>Seus pedidos</h1>
-    {% for order in orders %}
+    {% for order in object_list %}
       <div class="cie">
         {% if order.picture %}
           <img class="cie-picture" src="{{ order.picture.url }}"/>
@@ -98,6 +98,8 @@
         {% endif %}
         <div class="cie-year">{{ order.created_at.year }}</div>
       </div>
+    {% empty %}
+      <p>Nenhum pedido feito.</p>
     {% endfor %}
   </div>
 {% endblock %}
