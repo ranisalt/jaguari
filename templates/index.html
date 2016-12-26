@@ -11,6 +11,9 @@
       <h3 class="masthead-brand" href="{% url 'home' %}">DCE Luis Travassos</h3>
       <nav class="nav nav-masthead">
         {% if user.is_authenticated %}
+          {% if user.is_staff %}
+            <a class="nav-link" href="{% url 'admin:index' %}">Administração</a>
+          {% endif %}
           <a class="nav-link" href="{% url 'orders' %}">Pedidos</a>
           <a class="nav-link" href="{% url 'logout' %}">Logout</a>
         {% else %}
