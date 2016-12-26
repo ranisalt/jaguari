@@ -1,9 +1,18 @@
 
-# Created by https://www.gitignore.io/api/python,virtualenv
+# Created by https://www.gitignore.io/api/django,python,sass,virtualenv
+
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+media
+
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
-__pycache__/
 *.py[cod]
 *$py.class
 
@@ -24,6 +33,7 @@ lib64/
 parts/
 sdist/
 var/
+wheels/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -51,11 +61,8 @@ coverage.xml
 
 # Translations
 *.mo
-*.pot
 
 # Django stuff:
-*.log
-local_settings.py
 
 # Flask stuff:
 instance/
@@ -94,6 +101,11 @@ ENV/
 .ropeproject
 
 
+### Sass ###
+.sass-cache/
+*.css.map
+
+
 ### VirtualEnv ###
 # Virtualenv
 # http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
@@ -106,3 +118,5 @@ ENV/
 pyvenv.cfg
 .venv
 pip-selfcheck.json
+
+# End of https://www.gitignore.io/api/django,python,sass,virtualenv
