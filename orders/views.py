@@ -10,7 +10,8 @@ class OrdersView(LoginRequiredMixin, ListView):
     model = Order
 
     def get_queryset(self):
-        return self.model.objects.filter(student=self.request.user)
+        qs = super(OrdersView, self).get_queryset()
+        return qs.filter(student=self.request.user)
 
 
 class OrderDetailView(LoginRequiredMixin, DetailView):
