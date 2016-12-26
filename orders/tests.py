@@ -32,9 +32,9 @@ class Orders(TransactionTestCase):
         OrderFactory.create_batch(5, student=self.user)
 
         response = self.client.get(reverse('orders'))
-        self.assertTemplateUsed(response, 'orders/index.html')
+        self.assertTemplateUsed(response, 'orders/order_list.html')
 
-        orders = response.context['orders']
+        orders = response.context['object_list']
 
         # users should see all anf only their orders
         self.assertEqual(5, orders.count())

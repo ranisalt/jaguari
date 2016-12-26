@@ -1,20 +1,16 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import View
+from django.views.generic import ListView, View
 from pagseguro.api import PagSeguroApi, PagSeguroItem
 from .models import Order
 
 
-class OrdersView(LoginRequiredMixin, View):
+class OrdersView(LoginRequiredMixin, ListView):
     model = Order
 
-    def get(self, request: HttpRequest) -> HttpResponse:
-        """Index of user orders"""
-        queryset = self.model.objects.filter(student=self.request.user)
-        return render(request, 'orders/index.html', {
-            'orders': queryset
-        })
+    def get_queryset(self):
+        return self.model.objects.filter(student=self.request.user)
 
 
 class OrderDetailView(View):
