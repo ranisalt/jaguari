@@ -82,21 +82,21 @@ class Orders(TransactionTestCase):
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, 'orders/new.html')
 
-        order = response.context['order']
-        self.assertEqual(self.client.session['order'], str(order.pk))
-        self.assertEqual(self.user, order.student)
+        object = response.context['object']
+        self.assertEqual(self.client.session['order'], str(object.pk))
+        self.assertEqual(self.user, object.student)
         self.assertEqual(
             iso8601.parse_date(student_json['dataNascimento']).date(),
-            order.birthday)
-        self.assertEqual(str(student_json['cpf']), order.cpf)
-        self.assertEqual(student_json['identidade'], order.identity_number)
+            object.birthday)
+        self.assertEqual(str(student_json['cpf']), object.cpf)
+        self.assertEqual(student_json['identidade'], object.identity_number)
         self.assertEqual(student_json['siglaOrgaoEmissorIdentidade'],
-                         order.identity_issuer)
+                         object.identity_issuer)
         self.assertEqual(student_json['codigoUfIdentidade'],
-                         order.identity_state)
-        self.assertEqual(student_json['matricula'], order.enrollment_number)
+                         object.identity_state)
+        self.assertEqual(student_json['matricula'], object.enrollment_number)
 
-        degree = order.degree
+        degree = object.degree
         self.assertEqual(Degree.UNDERGRADUATE, degree.tier)
         self.assertEqual(degree_json['nomeCompleto'], degree.name)
         self.assertEqual(degree_json['campus']['id'], degree.campus)
