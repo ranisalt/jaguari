@@ -44,7 +44,7 @@ class OrderFactory(factory.django.DjangoModelFactory):
     student = factory.SubFactory(UserFactory)
     degree = factory.SubFactory(DegreeFactory)
     birthday = factory.Faker('date_object')
-    cpf = factory.Faker('random_number', digits=11)
+    cpf = factory.Faker('numerify', text='###########')
     identity_number = factory.Faker('numerify', text='#######')
     identity_issuer = 'SC'
     identity_state = 'SSP'
