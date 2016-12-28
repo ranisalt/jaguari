@@ -5,6 +5,8 @@ from .base import *
 
 ALLOWED_HOSTS = ['localhost']
 
+AUTHENTICATION_BACKENDS += ['django.contrib.auth.backends.ModelBackend']
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'knmo&y7or4!sxfqab74_-923od*rih36f5!2=f_#x!t%pjkdoc'
 
