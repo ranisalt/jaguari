@@ -1,8 +1,8 @@
+import iso8601
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import DetailView, ListView, View
+from django.views.generic import CreateView, DetailView, ListView
 from pagseguro.api import PagSeguroApi, PagSeguroItem
+from .forms import OrderForm
 from .models import Order
 
 
@@ -18,21 +18,21 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
     model = Order
 
 
-class OrderCreateView(LoginRequiredMixin, View):
+class OrderCreateView(LoginRequiredMixin, CreateView):
+    form_class = OrderForm
     model = Order
 
-    def get(self, request: HttpRequest) -> HttpResponse:
-        order = self.model.objects.fetch(request.user)
-        request.session['order'] = str(order.pk)
-        return render(request, 'orders/new.html', {
-            'order': order
-        })
+    def get_initial(self):
+        userdata = self.request.session.get('userdata')
+        if userdata is None:
+            userdata = self.model.objects.fetch(self.request.user)
+            self.request.session['userdata'] = userdata.copy()
 
-    def post(self, request: HttpRequest) -> HttpResponse:
-        """Create new order"""
-        order = get_object_or_404(self.model, pk=request.session['order'])
-        order.picture = request.FILES['picture']
-        order.save()
+        userdata['birthday'] = iso8601.parse_date(userdata['birthday']).date()
+        return userdata
+
+    def get_success_url(self):
+        order = self.object
 
         item = PagSeguroItem(id=str(order.pk),
                              description='Carteira de Identificação Estudantil',
@@ -50,4 +50,4 @@ class OrderCreateView(LoginRequiredMixin, View):
 
         api.add_item(item)
         checkout = api.checkout()
-        return redirect(checkout['redirect_url'])
+        return checkout['redirect_url']

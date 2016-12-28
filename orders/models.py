@@ -1,4 +1,3 @@
-import iso8601
 import requests
 import uuid
 from django.conf import settings
@@ -13,16 +12,17 @@ from django_localflavor_br.br_states import STATE_CHOICES
 class DegreeManager(models.Manager):
     endpoint = 'https://ws.ufsc.br/CAGRService/cursoGraduacaoAluno/{}'
 
-    def fetch(self, enrollment_hint):
-        response = requests.get(self.endpoint.format(enrollment_hint),
-                                auth=settings.CAGR_KEY).json()
+    def get_or_fetch(self, pk, enrollment_hint):
+        try:
+            return self.get(pk=pk)
+        except Degree.DoesNotExist:
+            response = requests.get(self.endpoint.format(enrollment_hint),
+                                    auth=settings.CAGR_KEY).json()
 
-        return self.update_or_create(
-            id=response['codigo'],
-            tier=Degree.UNDERGRADUATE,
-            name=response['nomeCompleto'],
-            campus=response['campus']['id'],
-        )
+            return self.create(id=response['codigo'],
+                               tier=Degree.UNDERGRADUATE,
+                               name=response['nomeCompleto'],
+                               campus=response['campus']['id'])
 
 
 class Degree(models.Model):
@@ -83,19 +83,19 @@ class OrderManager(models.Manager):
                                 auth=settings.CAGR_KEY).json()
         *_, data = (link for link in response if is_valid(**link))
 
-        enrollment_number = data['matricula']
-        degree, _ = Degree.objects.fetch(str(enrollment_number))
-        birthday = iso8601.parse_date(data['dataNascimento'])
-        return self.create(
-            student=user,
-            degree=degree,
-            birthday=birthday.date(),
-            cpf=str(data['cpf']).zfill(11),
-            identity_number=data['identidade'],
-            identity_issuer=data['siglaOrgaoEmissorIdentidade'],
-            identity_state=data['codigoUfIdentidade'],
-            enrollment_number=enrollment_number,
-        )
+        degree_id, enrollment_number = data['codigoCurso'], data['id']
+        degree = Degree.objects.get_or_fetch(degree_id, enrollment_number)
+        return dict(student_id=user.pk,
+                    degree_id=degree.pk,
+                    birthday=data['dataNascimento'],
+                    cpf=str(data['cpf']).zfill(11),
+                    identity_number=data['identidade'],
+                    identity_issuer=data['siglaOrgaoEmissorIdentidade'],
+                    identity_state=data['codigoUfIdentidade'],
+                    enrollment_number=enrollment_number)
+
+    def with_picture(self):
+        return self.exclude(picture='')
 
 
 def picture_path(instance, filename: str) -> str:
