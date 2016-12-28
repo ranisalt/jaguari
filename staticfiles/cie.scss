@@ -19,7 +19,6 @@ a:hover {
   border: .05rem solid #fff;
 }
 
-
 /*
  * Base structure
  */
@@ -29,10 +28,11 @@ body {
   height: 100%;
   background-color: #333;
 }
+
 body {
   color: #fff;
   text-align: center;
-  text-shadow: 0 .05rem .1rem rgba(0,0,0,.5);
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
 }
 
 /* Extra markup and styles for table-esque vertical and horizontal centering */
@@ -41,13 +41,15 @@ body {
   width: 100%;
   height: 100%; /* For at least Firefox */
   min-height: 100%;
-  -webkit-box-shadow: inset 0 0 5rem rgba(0,0,0,.5);
-          box-shadow: inset 0 0 5rem rgba(0,0,0,.5);
+  -webkit-box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
 }
+
 .site-wrapper-inner {
   display: table-cell;
   vertical-align: top;
 }
+
 .cover-container {
   margin-right: auto;
   margin-left: auto;
@@ -57,7 +59,6 @@ body {
 .inner {
   padding: 2rem;
 }
-
 
 /*
  * Header
@@ -74,14 +75,14 @@ body {
 .nav-masthead .nav-link {
   padding: .25rem 0;
   font-weight: bold;
-  color: rgba(255,255,255,.5);
+  color: rgba(255, 255, 255, .5);
   background-color: transparent;
   border-bottom: .25rem solid transparent;
 }
 
 .nav-masthead .nav-link:hover,
 .nav-masthead .nav-link:focus {
-  border-bottom-color: rgba(255,255,255,.25);
+  border-bottom-color: rgba(255, 255, 255, .25);
 }
 
 .nav-masthead .nav-link + .nav-link {
@@ -102,7 +103,6 @@ body {
   }
 }
 
-
 /*
  * Cover
  */
@@ -110,20 +110,19 @@ body {
 .cover {
   padding: 0 1.5rem;
 }
+
 .cover .btn-lg {
   padding: .75rem 1.25rem;
   font-weight: bold;
 }
-
 
 /*
  * Footer
  */
 
 .mastfoot {
-  color: rgba(255,255,255,.5);
+  color: rgba(255, 255, 255, .5);
 }
-
 
 /*
  * Affix and center
@@ -156,5 +155,67 @@ body {
   .mastfoot,
   .cover-container {
     width: 42rem;
+  }
+}
+
+.container {
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.cie {
+  background: url('/orders/cie.png') no-repeat;
+  background-size: cover;
+  color: black;
+  font: 2.5mm/1.15em 'Arial', sans-serif;
+  height: 54mm;
+  margin: 3rem auto;
+  position: relative;
+  text-align: left;
+  width: 86mm;
+
+  .cie-picture {
+    height: 30.5mm;
+    left: 4mm;
+    position: absolute;
+    top: 10.25mm;
+    width: 24.5mm;
+  }
+
+  .cie-name {
+    left: 29.5mm;
+    position: absolute;
+    top: 13mm;
+  }
+
+  .cie-degree {
+    left: 29.5mm;
+    position: absolute;
+    top: 20.5mm;
+  }
+
+  .cie-details {
+    left: 39mm;
+    position: absolute;
+    top: 30.25mm;
+  }
+
+  .cie-use-code {
+    font-weight: bold;
+    left: 39.25mm;
+    position: absolute;
+    text-align: center;
+    top: 45.9mm;
+    width: 20.25mm;
+  }
+
+  .cie-year {
+    font-size: 4.5mm;
+    font-weight: bold;
+    left: 67.5mm;
+    position: absolute;
+    text-align: center;
+    top: 45.5mm;
+    width: 11mm;
   }
 }
