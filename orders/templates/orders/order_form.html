@@ -1,0 +1,51 @@
+{% extends 'template.html' %}
+
+{% block 'content' %}
+  <div class="container">
+    <form enctype="multipart/form-data" method="post">
+      {% csrf_token %}
+
+      {% load i18n %}
+      {% trans 'name' as name_text %}
+      {% trans 'birthday' as birthday_text %}
+      {% trans 'CPF' as cpf_text %}
+      {% trans 'identity' as identity_text %}
+      {% trans 'enrollment number' as enrollment_text %}
+      {% trans 'degree' as degree_text %}
+      {% trans 'submit order' as submit_text %}
+
+      {% load orders_extras %}
+      <p>
+        <label for="id_display-name">{{ name_text | capfirst }}:</label>
+        <span id="id_display-name">{{ request.user.get_full_name }}</span>
+      </p>
+      <p>
+        <label for="id_birthday">{{ birthday_text | capfirst }}:</label>
+        <span id="id_birthday">{{ form.initial.birthday | date:'d/m/Y' }}</span>
+      </p>
+      <p>
+        <label for="id_cpf">{{ cpf_text | capfirst }}:</label>
+        <span id="id_cpf">{{ form.initial | cpf }}</span>
+      </p>
+      <p>
+        <label for="id_identity">{{ identity_text | capfirst }}:</label>
+        <span id="id_identity">{{ form.initial | rg }}</span>
+      </p>
+      <p>
+        <label for="enrollment">{{ enrollment_text | capfirst }}:</label>
+        <span id="id_enrollment">{{ form.initial.enrollment_number }}</span>
+      </p>
+      <p>
+        <label for="id_degree">{{ degree_text | capfirst }}:</label>
+        <span id="id_degree">{{ form.initial.degree_id | degree }}</span>
+      </p>
+      {{ form.as_p }}
+      <input type="submit" value="{{ submit_text | capfirst }}"/>
+    </form>
+  </div>
+{% endblock %}
+
+{% block 'scripts' %}
+  {% load staticfiles %}
+  <script src="{% static 'cie.js' %}"></script>
+{% endblock %}

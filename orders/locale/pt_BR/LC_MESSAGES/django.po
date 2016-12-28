@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-17 05:42-0200\n"
+"POT-Creation-Date: 2016-12-26 22:52-0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,35 +18,32 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: orders/admin.py:27
+#: orders/admin.py:24 orders/templates/orders/order_form.html:10
 msgid "birthday"
 msgstr "data de nascimento"
 
-#: orders/admin.py:33
+#: orders/admin.py:29 orders/templates/orders/order_form.html:11
 msgid "CPF"
 msgstr ""
 
-#: orders/admin.py:38 orders/models.py:55
+#: orders/admin.py:34 orders/models.py:55
+#: orders/templates/orders/order_form.html:9
 msgid "name"
 msgstr "nome"
 
-#: orders/admin.py:45
+#: orders/admin.py:39 orders/templates/orders/order_form.html:12
 msgid "identity"
 msgstr "identidade"
 
-#: orders/admin.py:48
-msgid "{tier} in {name} ({campus})"
-msgstr "{tier} em {name} ({campus})"
-
-#: orders/admin.py:53
+#: orders/admin.py:44
 msgid "academic degree"
 msgstr "grau de escolaridade"
 
-#: orders/admin.py:64
+#: orders/admin.py:55
 msgid "(none)"
 msgstr "(nenhum)"
 
-#: orders/admin.py:65
+#: orders/admin.py:56
 msgid "picture"
 msgstr "foto"
 
@@ -74,38 +71,47 @@ msgstr "código"
 msgid "tier"
 msgstr "grau"
 
-#: orders/models.py:59
+#: orders/models.py:59 orders/templates/orders/order_form.html:14
 msgid "degree"
 msgstr "curso"
 
-#: orders/models.py:113
+#: orders/models.py:114
 msgid "Waiting"
 msgstr "Aguardando"
 
-#: orders/models.py:114
+#: orders/models.py:115
 msgid "Printed"
 msgstr "Impresso"
 
-#: orders/models.py:115
+#: orders/models.py:116
 msgid "Delivered"
 msgstr "Entregue"
 
-#: orders/models.py:119
+#: orders/models.py:120
 msgid "use code"
 msgstr "código de uso"
 
-#: orders/models.py:130
+#: orders/models.py:131 orders/templates/orders/order_form.html:13
 msgid "enrollment number"
 msgstr "matrícula"
 
-#: orders/models.py:134
+#: orders/models.py:135
 msgid "created at"
 msgstr "criado em"
 
-#: orders/models.py:137
+#: orders/models.py:138
 msgid "print status"
 msgstr "status da impressão"
 
-#: orders/models.py:141
+#: orders/models.py:148 orders/templatetags/orders_extras.py:28
+#, python-brace-format
+msgid "{tier} in {name} ({campus})"
+msgstr "{tier} em {name} ({campus})"
+
+#: orders/models.py:160
 msgid "order"
 msgstr "pedido"
+
+#: orders/templates/orders/order_form.html:15
+msgid "submit order"
+msgstr "finalizar pedido"
