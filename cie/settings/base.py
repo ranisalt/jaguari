@@ -94,6 +94,9 @@ STATICFILES_FINDERS = [
 
 STATIC_URL = '/static/'
 
+# File upload configuration
+MEDIA_URL = '/media/'
+
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Static file compression
