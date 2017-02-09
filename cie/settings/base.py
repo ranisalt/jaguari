@@ -10,10 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
-from os import path
+from os import pardir, path
 
 # Build paths inside the project like this: path.join(BASE_DIR, ...)
-BASE_DIR = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
+BASE_DIR = path.join(path.dirname(path.abspath(__file__)), pardir, pardir)
 
 # Application definition
 
