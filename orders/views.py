@@ -36,7 +36,7 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
 
         item = PagSeguroItem(id=str(order.pk),
                              description='Carteira de Identificação Estudantil',
-                             amount='15.00',
+                             amount='20.00',
                              quantity=1)
 
         api = PagSeguroApi(reference=str(order.pk),
