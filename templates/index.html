@@ -1,5 +1,10 @@
 {% extends 'template.html' %}
 
+{% block 'extra_styles' %}
+  {% load staticfiles %}
+  <link rel="stylesheet" type="text/x-scss" href="{% static 'home.scss' %}">
+{% endblock %}
+
 {% block 'navbar' %}
   <div class="masthead">
     <div class="inner">
