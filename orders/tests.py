@@ -1,3 +1,4 @@
+import copy
 import os
 import responses
 import datetime
@@ -107,6 +108,23 @@ class Orders(TransactionTestCase):
             'identity_state': 'SC',
             'enrollment_number': '15100000',
         }, initial)
+
+    def test_new_order_missing_field(self):
+        broken_links = copy.deepcopy(self.links)
+        del broken_links[0]['siglaOrgaoEmissorIdentidade']
+
+        self.responses.add(
+            method=responses.GET,
+            url=ws('CadastroPessoaService',
+                   'vinculosPessoaById',
+                   self.user.username),
+            json=broken_links)
+
+        response = self.client.get(reverse('orders:create'))
+
+        # ensure response is OK status
+        self.assertEqual(400, response.status_code)
+        self.assertTemplateUsed(response, 'errors/missing_fields.html')
 
     def test_post_new_order(self):
         degree = DegreeFactory(id=123)
