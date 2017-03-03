@@ -102,7 +102,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Static file compression
 COMPRESS_PRECOMPILERS = [
-    ('text/x-scss', 'sass --scss {infile} {outfile}'),
+    ('text/x-scss', 'django_libsass.SassCompiler'),
 ]
 
 # CAS login configuration
