@@ -1,7 +1,14 @@
 {% extends 'template.html' %}
 
 {% block 'content' %}
-  {% for field in fields %}
-    {{ field }}
-  {% endfor %}
+  <h1>Ocorreu um erro.</h1>
+  <p>Os seguintes campos estão faltando:</p>
+
+  <ul>
+    {% for field in fields %}
+      <li>{{ field }}</li>
+    {% endfor %}
+  </ul>
+
+  <p>Verifique seu cadastro no CAGR, corrija os dados e tente novamente.</p>
 {% endblock %}
