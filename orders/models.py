@@ -68,8 +68,23 @@ def user_authenticated(user, attributes, **kwargs):
     user.save()
 
 
+class MissingFieldsError(KeyError):
+    def __init__(self, fields, *args, **kwargs):
+        self.fields = fields
+        super().__init__(*args, **kwargs)
+
+
 class OrderManager(models.Manager):
     endpoint = 'https://ws.ufsc.br/CadastroPessoaService/vinculosPessoaById/{}'
+    required_fields = {
+        'codigoCurso': _('degree'),
+        'codigoUfIdentidade': _('identity state'),
+        'cpf': _('CPF'),
+        'dataNascimento': _('birthday'),
+        'id': _('enrollment number'),
+        'identidade': _('identity number'),
+        'siglaOrgaoEmissorIdentidade': _('identity issuer'),
+    }
 
     def fetch(self, user):
         def is_valid(ativo, codigoSituacao, codigoVinculo, **kwargs):
@@ -82,6 +97,10 @@ class OrderManager(models.Manager):
         response = requests.get(self.endpoint.format(user.get_username()),
                                 auth=settings.CAGR_KEY).json()
         *_, data = (link for link in response if is_valid(**link))
+
+        missing = [f for f in self.required_fields if f not in data]
+        if len(missing) > 0:
+            raise MissingFieldsError(self.required_fields[f] for f in missing)
 
         degree_id, enrollment_number = data['codigoCurso'], data['id']
         degree = Degree.objects.get_or_fetch(degree_id, enrollment_number)
