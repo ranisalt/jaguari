@@ -2,8 +2,6 @@ language: python
 python: 3.5
 env:
     - DJANGO_SETTINGS_MODULE="cie.settings.development"
-before_script:
-    - gem install sass
-    - pip install coverage coveralls responses
+before_script: pip install coverage coveralls
 script: coverage run manage.py test
 after_success: coveralls
