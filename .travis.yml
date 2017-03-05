@@ -1,5 +1,8 @@
 language: python
-python: 3.5
+python:
+    - 3.4
+    - 3.5
+    - 3.6
 env:
     - DJANGO_SETTINGS_MODULE="cie.settings.development"
 before_script: pip install coverage coveralls
