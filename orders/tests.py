@@ -126,6 +126,57 @@ class Orders(TransactionTestCase):
         self.assertEqual(400, response.status_code)
         self.assertTemplateUsed(response, 'errors/missing_fields.html')
 
+    def test_new_order_no_active_link(self):
+        broken_links = copy.deepcopy(self.links)
+        broken_links[0]['ativo'] = False
+
+        self.responses.add(
+            method=responses.GET,
+            url=ws('CadastroPessoaService',
+                   'vinculosPessoaById',
+                   self.user.username),
+            json=broken_links)
+
+        response = self.client.get(reverse('orders:create'))
+
+        # ensure response is OK status
+        self.assertEqual(400, response.status_code)
+        self.assertTemplateUsed(response, 'errors/no_valid_link.html')
+
+    def test_new_order_no_regular_link(self):
+        broken_links = copy.deepcopy(self.links)
+        broken_links[0]['codigoSituacao'] += 1
+
+        self.responses.add(
+            method=responses.GET,
+            url=ws('CadastroPessoaService',
+                   'vinculosPessoaById',
+                   self.user.username),
+            json=broken_links)
+
+        response = self.client.get(reverse('orders:create'))
+
+        # ensure response is OK status
+        self.assertEqual(400, response.status_code)
+        self.assertTemplateUsed(response, 'errors/no_valid_link.html')
+
+    def test_new_order_no_undergraduate_link(self):
+        broken_links = copy.deepcopy(self.links)
+        broken_links[0]['codigoVinculo'] += 1
+
+        self.responses.add(
+            method=responses.GET,
+            url=ws('CadastroPessoaService',
+                   'vinculosPessoaById',
+                   self.user.username),
+            json=broken_links)
+
+        response = self.client.get(reverse('orders:create'))
+
+        # ensure response is OK status
+        self.assertEqual(400, response.status_code)
+        self.assertTemplateUsed(response, 'errors/no_valid_link.html')
+
     def test_post_new_order(self):
         degree = DegreeFactory(id=123)
 
