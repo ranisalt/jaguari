@@ -74,6 +74,10 @@ class MissingFieldsError(KeyError):
         super().__init__(*args, **kwargs)
 
 
+class NoValidLinkError(ValueError):
+    pass
+
+
 class OrderManager(models.Manager):
     endpoint = 'https://ws.ufsc.br/CadastroPessoaService/vinculosPessoaById/{}'
     required_fields = {
@@ -96,8 +100,12 @@ class OrderManager(models.Manager):
 
         response = requests.get(self.endpoint.format(user.get_username()),
                                 auth=settings.CAGR_KEY).json()
-        *_, data = (link for link in response if is_valid(**link))
 
+        links = [link for link in response if is_valid(**link)]
+        if len(links) == 0:
+            raise NoValidLinkError()
+
+        *_, data = links
         missing = [f for f in self.required_fields if f not in data]
         if len(missing) > 0:
             raise MissingFieldsError(self.required_fields[f] for f in missing)

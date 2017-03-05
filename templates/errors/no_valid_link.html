@@ -1,0 +1,18 @@
+{% extends 'template.html' %}
+
+{% block 'content' %}
+  <h1>Ocorreu um erro.</h1>
+  <p>Você não tem um vínculo válido. Certifique-se que:</p>
+
+  <ul>
+    <li>está matriculado em um curso de graduação da UFSC
+      <small>
+        (não podemos emitir para o Colégio de Aplicação ou cursos de
+        pós-graduação)
+      </small>
+    </li>
+    <li>sua matrícula não está trancada ou irregular de alguma forma</li>
+  </ul>
+
+  <p>Verifique seu cadastro no DAE, corrija os problemas e tente novamente.</p>
+{% endblock %}
