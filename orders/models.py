@@ -64,7 +64,9 @@ class Degree(models.Model):
 @receiver(cas_user_authenticated)
 def user_authenticated(user, attributes, **kwargs):
     user.email = attributes['email']
-    user.first_name, user.last_name = attributes['nomeSocial'].split(maxsplit=1)
+    name = attributes['nomeSocial']
+    middle = name.rfind(' ', 0, 30)
+    user.first_name, user.last_name = name[:middle], name[middle:].lstrip()
     user.save()
 
 
