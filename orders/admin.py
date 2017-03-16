@@ -3,6 +3,8 @@ from django.conf import settings
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from pagseguro.models import Transaction
+
 from .models import Degree, Order
 
 
@@ -58,8 +60,19 @@ class OrderAdmin(admin.ModelAdmin):
     picture_tag.empty_value_display = _('(none)')
     picture_tag.short_description = _('picture')
 
-    list_display = ('name_tag', 'created_at', 'print_status')
-    list_filter = ('degree__tier', 'degree__campus', 'print_status')
+    def transaction_tag(self, obj: Order):
+        transaction = Transaction.objects.get(reference=str(obj.pk))
+        if transaction:
+            return transaction.status
+
+    transaction_tag.empty_value_display = _('(none)')
+    transaction_tag.short_description = _('transaction status')
+
+    list_display = ('name_tag', 'created_at', 'transaction_tag', 'print_status')
+    list_filter = ('degree__tier',
+                   'degree__campus',
+                   'transaction_tag',
+                   'print_status')
     fields = ('use_code',
               'name_tag',
               'birthday_tag',
@@ -68,6 +81,7 @@ class OrderAdmin(admin.ModelAdmin):
               'enrollment_number',
               'degree_tag',
               'picture_tag',
+              'transaction_tag',
               'print_status')
     readonly_fields = ('name_tag',
                        'birthday_tag',
@@ -75,4 +89,5 @@ class OrderAdmin(admin.ModelAdmin):
                        'identity_tag',
                        'enrollment_number',
                        'degree_tag',
-                       'picture_tag')
+                       'picture_tag',
+                       'transaction_tag')
