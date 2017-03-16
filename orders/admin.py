@@ -14,7 +14,7 @@ class DegreeAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    actions = None
+    actions = []
     date_hierarchy = 'created_at'
 
     def get_queryset(self, request):
