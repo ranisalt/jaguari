@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from pagseguro.models import Transaction
+from pagseguro.models import Transaction, TRANSACTION_STATUS_CHOICES
 
 from .models import Degree, Order
 
@@ -12,6 +12,19 @@ from .models import Degree, Order
 class DegreeAdmin(admin.ModelAdmin):
     list_display = ('id', 'tier', 'name', 'campus')
     list_filter = ('tier', 'campus')
+
+
+class TransactionStatusFilter(admin.SimpleListFilter):
+    title = _('transaction status')
+
+    parameter_name = 'transaction'
+
+    def lookups(self, request, model_admin):
+        return TRANSACTION_STATUS_CHOICES
+
+    def queryset(self, request, queryset):
+        inner_qs = Transaction.objects.filter(status=self.value())
+        return queryset.filter(id__in=inner_qs.values('reference'))
 
 
 @admin.register(Order)
@@ -63,15 +76,15 @@ class OrderAdmin(admin.ModelAdmin):
     def transaction_tag(self, obj: Order):
         transaction = Transaction.objects.get(reference=str(obj.pk))
         if transaction:
-            return transaction.status
+            return transaction.get_status_display()
 
     transaction_tag.empty_value_display = _('(none)')
     transaction_tag.short_description = _('transaction status')
 
     list_display = ('name_tag', 'created_at', 'transaction_tag', 'print_status')
-    list_filter = ('degree__tier',
+    list_filter = (TransactionStatusFilter,
+                   'degree__tier',
                    'degree__campus',
-                   'transaction_tag',
                    'print_status')
     fields = ('use_code',
               'name_tag',
