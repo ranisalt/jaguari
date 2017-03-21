@@ -5,7 +5,8 @@ import datetime
 from django.conf import settings
 from django.test import TransactionTestCase, override_settings
 from django.urls import reverse
-from .factories import DegreeFactory, OrderFactory, UserFactory
+from .factories import DegreeFactory, OrderFactory, TransactionFactory, \
+    UserFactory
 
 
 def resource(name: str, mode: str = 'r'):
@@ -203,6 +204,28 @@ class Orders(TransactionTestCase):
         self.assertRedirects(response,
                              'https://sandbox.pagseguro.uol.com.br/v2/checkout/payment.html?code=00000000000000000000000000000000',
                              fetch_redirect_response=False)
+
+    def test_order_transaction_status_filter(self):
+        from pagseguro.admin import TransactionAdmin
+        from pagseguro.models import Transaction
+        from .admin import TransactionStatusFilter
+        from .models import Order
+
+        for order in OrderFactory.create_batch(5):
+            TransactionFactory(reference=str(order.pk))
+
+        order = OrderFactory()
+        transaction = TransactionFactory(reference=str(order.pk), status='pago')
+
+        filter = TransactionStatusFilter(request=None,
+                                         params={'status': 'pago'},
+                                         model=Transaction,
+                                         model_admin=TransactionAdmin)
+        result = filter.queryset(None, Order.objects.all())
+        self.assertEqual(1, result.count())
+        self.assertEqual(order, result.get())
+        self.assertEqual(transaction,
+                         Transaction.objects.get(reference=str(order.pk)))
 
     def tearDown(self):
         self.responses.__exit__()
