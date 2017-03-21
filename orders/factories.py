@@ -1,5 +1,7 @@
 import factory
 from django.contrib.auth.models import User
+from django.utils import timezone
+from pagseguro.models import Transaction
 from .models import Degree, Order
 
 
