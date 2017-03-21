@@ -23,6 +23,9 @@ class TransactionStatusFilter(admin.SimpleListFilter):
         return TRANSACTION_STATUS_CHOICES
 
     def queryset(self, request, queryset):
+        if not self.value():
+            return
+
         strip = Func(F('reference'), Value('-'), Value(''), function='REPLACE')
         inner_qs = Transaction.objects.filter(status=self.value()).annotate(
             order_id=strip).values('order_id')
