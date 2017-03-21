@@ -1,6 +1,7 @@
 import os
 from django.conf import settings
 from django.contrib import admin
+from django.db.models.expressions import F, Func, Value
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from pagseguro.models import Transaction, TRANSACTION_STATUS_CHOICES
@@ -16,15 +17,16 @@ class DegreeAdmin(admin.ModelAdmin):
 
 class TransactionStatusFilter(admin.SimpleListFilter):
     title = _('transaction status')
-
-    parameter_name = 'transaction'
+    parameter_name = 'status'
 
     def lookups(self, request, model_admin):
         return TRANSACTION_STATUS_CHOICES
 
     def queryset(self, request, queryset):
-        inner_qs = Transaction.objects.filter(status=self.value())
-        return queryset.filter(id__in=inner_qs.values('reference'))
+        strip = Func(F('reference'), Value('-'), Value(''), function='REPLACE')
+        inner_qs = Transaction.objects.filter(status=self.value()).annotate(
+            order_id=strip).values('order_id')
+        return queryset.filter(id__in=inner_qs)
 
 
 @admin.register(Order)

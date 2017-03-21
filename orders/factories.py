@@ -35,6 +35,16 @@ class OrderFactory(factory.django.DjangoModelFactory):
     birthday = factory.Faker('date_object')
     cpf = factory.Faker('numerify', text='###########')
     identity_number = factory.Faker('numerify', text='#######')
-    identity_issuer = 'SC'
-    identity_state = 'SSP'
+    identity_issuer = 'SSP'
+    identity_state = 'SC'
     enrollment_number = factory.Faker('numerify', text='151#####')
+
+
+class TransactionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Transaction
+
+    code = factory.Faker('uuid4')
+    status = 'aguardando'
+    date = factory.LazyFunction(timezone.now)
+    last_event_date = factory.LazyFunction(timezone.now)
