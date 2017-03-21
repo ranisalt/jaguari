@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-16 01:37-0300\n"
+"POT-Creation-Date: 2017-03-21 02:41-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,40 +18,40 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: orders/admin.py:25 orders/models.py:89
+#: orders/admin.py:19 orders/admin.py:87
+msgid "transaction status"
+msgstr "status da transação"
+
+#: orders/admin.py:47 orders/models.py:89
 #: orders/templates/orders/order_form.html:10
 msgid "birthday"
 msgstr "data de nascimento"
 
-#: orders/admin.py:30 orders/models.py:88
+#: orders/admin.py:52 orders/models.py:88
 #: orders/templates/orders/order_form.html:11
 msgid "CPF"
 msgstr ""
 
-#: orders/admin.py:35 orders/models.py:55
+#: orders/admin.py:57 orders/models.py:55
 #: orders/templates/orders/order_form.html:9
 msgid "name"
 msgstr "nome"
 
-#: orders/admin.py:40 orders/templates/orders/order_form.html:12
+#: orders/admin.py:62 orders/templates/orders/order_form.html:12
 msgid "identity"
 msgstr "identidade"
 
-#: orders/admin.py:45
+#: orders/admin.py:67
 msgid "academic degree"
 msgstr "grau de escolaridade"
 
-#: orders/admin.py:56 orders/admin.py:64
+#: orders/admin.py:78 orders/admin.py:86
 msgid "(none)"
 msgstr "(nenhum)"
 
-#: orders/admin.py:57
+#: orders/admin.py:79
 msgid "picture"
 msgstr "foto"
-
-#: orders/admin.py:65
-msgid "transaction status"
-msgstr "status da transação"
 
 #: orders/apps.py:7
 msgid "Orders"
