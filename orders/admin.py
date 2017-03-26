@@ -93,6 +93,7 @@ class OrderAdmin(admin.ModelAdmin):
                    'degree__tier',
                    'degree__campus',
                    'print_status')
+    search_fields = ('student__first_name', 'student__last_name')
     fields = ('use_code',
               'name_tag',
               'birthday_tag',
