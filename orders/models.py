@@ -3,6 +3,8 @@ import uuid
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Value
+from django.db.models.functions import Concat
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from django_cas_ng.signals import cas_user_authenticated
@@ -91,6 +93,12 @@ class OrderManager(models.Manager):
         'identidade': _('identity number'),
         'siglaOrgaoEmissorIdentidade': _('identity issuer'),
     }
+
+    def get_queryset(self):
+        return super(OrderManager, self).get_queryset().annotate(
+            full_name=Concat('student__first_name',
+                             Value(' '),
+                             'student__last_name'))
 
     def fetch(self, user):
         def is_valid(ativo, codigoSituacao, codigoVinculo, **kwargs):
