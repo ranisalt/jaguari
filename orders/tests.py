@@ -227,5 +227,17 @@ class Orders(TransactionTestCase):
         self.assertEqual(transaction,
                          Transaction.objects.get(reference=str(order.pk)))
 
+    def test_order_full_name_search(self):
+        from orders.models import Order
+
+        OrderFactory.create_batch(5)
+        user = UserFactory(
+            name='Carolina Josefa Leopoldina de Habsburgo-Lorena')
+        order = OrderFactory(student=user)
+
+        result = Order.objects.filter(full_name__contains='josefa')
+        self.assertEqual(1, result.count())
+        self.assertEqual(order, result.get())
+
     def tearDown(self):
         self.responses.__exit__()
