@@ -1,7 +1,7 @@
 import os
 from django.conf import settings
 from django.contrib import admin
-from django.db.models.expressions import F, Func, Value
+from django.db.models.expressions import F as Field, Func, Value
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from pagseguro.models import Transaction, TRANSACTION_STATUS_CHOICES
@@ -15,6 +15,9 @@ class DegreeAdmin(admin.ModelAdmin):
     list_filter = ('tier', 'campus')
 
 
+strip_uuid = Func(Field('reference'), Value('-'), Value(''), function='REPLACE')
+
+
 class TransactionStatusFilter(admin.SimpleListFilter):
     title = _('transaction status')
     parameter_name = 'status'
@@ -26,9 +29,8 @@ class TransactionStatusFilter(admin.SimpleListFilter):
         if not self.value():
             return
 
-        strip = Func(F('reference'), Value('-'), Value(''), function='REPLACE')
         inner_qs = Transaction.objects.filter(status=self.value()).annotate(
-            order_id=strip).values('order_id')
+            order_id=strip_uuid).values('order_id')
         return queryset.filter(id__in=inner_qs)
 
 
