@@ -69,6 +69,9 @@ class OrderAdmin(admin.ModelAdmin):
         from django.urls import reverse
         from django.utils.html import format_html
 
+        if not obj.picture or not obj.use_code:
+            return
+
         tag = ('<object data="{0}" type="image/svg+xml"></object>'
                '<a style="display: block" href="{0}?background=false">{1}</a>')
         return format_html(tag, reverse('orders:detail', kwargs={
