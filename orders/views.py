@@ -1,5 +1,6 @@
 import iso8601
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.views.generic import CreateView, DetailView, ListView
 from pagseguro.api import PagSeguroApi, PagSeguroItem
 from .forms import OrderForm
@@ -15,7 +16,29 @@ class OrdersView(LoginRequiredMixin, ListView):
 
 
 class OrderDetailView(LoginRequiredMixin, DetailView):
+    content_type = 'image/svg+xml'
     model = Order
+    template_name = 'orders/order_detail.svg'
+
+
+class OrderQrView(LoginRequiredMixin, DetailView):
+    model = Order
+    slug_field = 'use_code'
+
+    def render_to_response(self, context, **response_kwargs):
+        import io
+        import qrcode
+        from qrcode.image.svg import SvgPathImage
+
+        url = 'https://cie.dce.ufsc.br/atributos/ws/dceufsc/{}'
+        image = qrcode.make(url.format(self.object.use_code),
+                            error_correction=qrcode.constants.ERROR_CORRECT_L,
+                            image_factory=SvgPathImage)
+
+        stream = io.BytesIO()
+        image.save(stream)
+        return HttpResponse(content=stream.getvalue(),
+                            content_type='image/svg+xml')
 
 
 class OrderCreateView(LoginRequiredMixin, CreateView):

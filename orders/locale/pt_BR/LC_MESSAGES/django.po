@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-21 02:41-0300\n"
+"POT-Creation-Date: 2017-04-01 03:53-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,120 +18,127 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: orders/admin.py:19 orders/admin.py:87
+#: orders/admin.py:19 orders/admin.py:86
 msgid "transaction status"
 msgstr "status da transação"
 
-#: orders/admin.py:47 orders/models.py:89
+#: orders/admin.py:46 orders/models.py:91
 #: orders/templates/orders/order_form.html:10
 msgid "birthday"
 msgstr "data de nascimento"
 
-#: orders/admin.py:52 orders/models.py:88
+#: orders/admin.py:51 orders/models.py:90
 #: orders/templates/orders/order_form.html:11
 msgid "CPF"
 msgstr ""
 
-#: orders/admin.py:57 orders/models.py:55
+#: orders/admin.py:56 orders/models.py:57
 #: orders/templates/orders/order_form.html:9
 msgid "name"
 msgstr "nome"
 
-#: orders/admin.py:62 orders/templates/orders/order_form.html:12
+#: orders/admin.py:61 orders/templates/orders/order_form.html:12
 msgid "identity"
 msgstr "identidade"
 
-#: orders/admin.py:67
+#: orders/admin.py:66
 msgid "academic degree"
 msgstr "grau de escolaridade"
 
-#: orders/admin.py:78 orders/admin.py:86
+#: orders/admin.py:76
+msgid "Click here to download printable template"
+msgstr "Clique aqui para baixar o modelo para impressão"
+
+#: orders/admin.py:78
+msgid "template"
+msgstr "Modelo"
+
+#: orders/admin.py:85
 msgid "(none)"
 msgstr "(nenhum)"
-
-#: orders/admin.py:79
-msgid "picture"
-msgstr "foto"
 
 #: orders/apps.py:7
 msgid "Orders"
 msgstr "Pedidos"
 
-#: orders/models.py:33
+#: orders/models.py:35
 msgid "High school"
 msgstr "Ensino Médio"
 
-#: orders/models.py:34
+#: orders/models.py:36
 msgid "Undergraduate"
 msgstr "Graduação"
 
-#: orders/models.py:35
+#: orders/models.py:37
 msgid "Postgraduate"
 msgstr "Pós-graduação"
 
-#: orders/models.py:51
+#: orders/models.py:53
 msgid "id"
 msgstr "código"
 
-#: orders/models.py:54
+#: orders/models.py:56
 msgid "tier"
 msgstr "grau"
 
-#: orders/models.py:59 orders/models.py:86
+#: orders/models.py:61 orders/models.py:88
 #: orders/templates/orders/order_form.html:14
 msgid "degree"
 msgstr "curso"
 
-#: orders/models.py:87
+#: orders/models.py:89
 msgid "identity state"
 msgstr "estado da identidade"
 
-#: orders/models.py:90 orders/models.py:159
+#: orders/models.py:92 orders/models.py:167
 #: orders/templates/orders/order_form.html:13
 msgid "enrollment number"
 msgstr "matrícula"
 
-#: orders/models.py:91
+#: orders/models.py:93
 msgid "identity number"
 msgstr "código da identidade"
 
-#: orders/models.py:92
+#: orders/models.py:94
 msgid "identity issuer"
 msgstr "emissor da identidade"
 
-#: orders/models.py:142
+#: orders/models.py:150
 msgid "Waiting"
 msgstr "Aguardando"
 
-#: orders/models.py:143
+#: orders/models.py:151
 msgid "Printed"
 msgstr "Impresso"
 
-#: orders/models.py:144
+#: orders/models.py:152
 msgid "Delivered"
 msgstr "Entregue"
 
-#: orders/models.py:148
+#: orders/models.py:156
 msgid "use code"
 msgstr "código de uso"
 
-#: orders/models.py:163
+#: orders/models.py:171
 msgid "created at"
 msgstr "criado em"
 
-#: orders/models.py:166
+#: orders/models.py:174
 msgid "print status"
 msgstr "status da impressão"
 
-#: orders/models.py:176 orders/templatetags/orders_extras.py:30
+#: orders/models.py:184 orders/templatetags/orders_extras.py:30
 #, python-brace-format
 msgid "{tier} in {name} ({campus})"
 msgstr "{tier} em {name} ({campus})"
 
-#: orders/models.py:188
+#: orders/models.py:196
 msgid "order"
 msgstr "pedido"
 
 #: orders/templates/orders/order_form.html:15
 msgid "submit order"
 msgstr "finalizar pedido"
+
+#~ msgid "picture"
+#~ msgstr "foto"

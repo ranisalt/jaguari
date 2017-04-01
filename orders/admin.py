@@ -1,8 +1,5 @@
-import os
-from django.conf import settings
 from django.contrib import admin
 from django.db.models.expressions import F as Field, Func, Value
-from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from pagseguro.models import Transaction, TRANSACTION_STATUS_CHOICES
 
@@ -68,17 +65,17 @@ class OrderAdmin(admin.ModelAdmin):
 
     degree_tag.short_description = _('academic degree')
 
-    picture_html = '<img src="{}" style="max-height:200px; max-width:200px;"/>'
+    def template_tag(self, obj: Order):
+        from django.urls import reverse
+        from django.utils.html import format_html
 
-    def picture_tag(self, obj: Order):
-        if obj.picture:
-            return mark_safe(
-                self.picture_html.format(
-                    os.path.join('/', settings.MEDIA_URL, obj.picture.url)
-                ))
+        tag = ('<object data="{0}" type="image/svg+xml"></object>'
+               '<a style="display: block" href="{0}?background=false">{1}</a>')
+        return format_html(tag, reverse('orders:detail', kwargs={
+            'pk': str(obj.pk),
+        }), _('Click here to download printable template'))
 
-    picture_tag.empty_value_display = _('(none)')
-    picture_tag.short_description = _('picture')
+    template_tag.short_description = _('template')
 
     def transaction_tag(self, obj: Order):
         transaction = Transaction.objects.get(reference=str(obj.pk))
@@ -101,7 +98,7 @@ class OrderAdmin(admin.ModelAdmin):
               'identity_tag',
               'enrollment_number',
               'degree_tag',
-              'picture_tag',
+              'template_tag',
               'transaction_tag',
               'print_status')
     readonly_fields = ('name_tag',
@@ -110,5 +107,5 @@ class OrderAdmin(admin.ModelAdmin):
                        'identity_tag',
                        'enrollment_number',
                        'degree_tag',
-                       'picture_tag',
+                       'template_tag',
                        'transaction_tag')

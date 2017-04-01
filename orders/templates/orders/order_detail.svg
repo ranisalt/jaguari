@@ -1,0 +1,37 @@
+<svg version="1.1" baseProfile="full" width="86mm" height="54mm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  {% if not request.GET.background %}
+    <!-- background -->
+    {% load static %}
+    <image x="0" y="0" width="100%" height="100%" xlink:href="{% static 'orders/cie.png' %}"/>
+  {% endif %}
+
+  {% if object.picture %}
+    <image x="4.0mm" y="10.0mm" width="24.8mm" height="30.2mm" preserveAspectRatio="none" xlink:href="{{ object.picture.url }}"/>
+  {% endif %}
+
+  {% if object.use_code %}
+    <image x="7.4mm" y="40.5mm" width="13.6mm" height="13.6mm" xlink:href="{% url 'orders:qr' object.use_code %}"/>
+  {% endif %}
+
+  <g font-family="Arial">
+    <g font-size="2.5mm" id="student">
+      <text x="29.6mm" y="15.8mm">{{ object.student.get_full_name }}</text>
+
+      <text x="29.6mm" y="22.9mm">Universidade Federal de Santa Catarina</text>
+      <text x="29.6mm" y="25.7mm">{{ object.degree.get_tier_display }}</text>
+      <text x="29.6mm" y="28.5mm">{{ object.degree.name }}</text>
+
+      <text x="39.6mm" y="32.5mm">{{ object.formatted_birthday }}</text>
+      <text x="39.6mm" y="35.2mm">{{ object.formatted_rg }}</text>
+      <text x="39.6mm" y="37.9mm">{{ object.formatted_cpf }}</text>
+    </g>
+
+    <g font-size="3.0mm" font-weight="700" id="code">
+      <text x="49.3mm" y="47.8mm" text-anchor="middle">{{ object.use_code }}</text>
+    </g>
+
+    <g font-size="5.0mm" font-weight="700" id="year">
+      <text x="72.8mm" y="48.3mm" text-anchor="middle">{{ object.created_at.year }}</text>
+    </g>
+  </g>
+</svg>

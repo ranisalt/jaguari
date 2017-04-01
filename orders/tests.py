@@ -64,16 +64,8 @@ class Orders(TransactionTestCase):
         response = self.client.get(reverse('orders:detail', kwargs={
             'pk': str(order.pk),
         }))
-        self.assertTemplateUsed(response, 'orders/order_detail.html')
-
-        object = response.context['object']
-        self.assertEqual(self.user, order.student)
-        self.assertEqual(object.birthday, order.birthday)
-        self.assertEqual(object.cpf, order.cpf)
-        self.assertEqual(object.identity_number, order.identity_number)
-        self.assertEqual(object.identity_issuer, order.identity_issuer)
-        self.assertEqual(object.identity_state, order.identity_state)
-        self.assertEqual(object.enrollment_number, order.enrollment_number)
+        self.assertTemplateUsed(response, 'orders/order_detail.svg')
+        self.assertEqual(order, response.context['object'])
 
     def test_new_order(self):
         self.responses.add(
