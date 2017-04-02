@@ -19,7 +19,7 @@
 
       <text x="29.6mm" y="22.9mm">Universidade Federal de Santa Catarina</text>
       <text x="29.6mm" y="25.7mm">{{ object.degree.get_tier_display }}</text>
-      <text x="29.6mm" y="28.5mm">{{ object.degree.name }}</text>
+      <text x="29.6mm" y="28.5mm">{{ object.degree.get_common_name }}</text>
 
       <text x="39.6mm" y="32.5mm">{{ object.formatted_birthday }}</text>
       <text x="39.6mm" y="35.2mm">{{ object.formatted_rg }}</text>
