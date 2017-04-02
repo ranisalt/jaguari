@@ -41,12 +41,12 @@ class OrderAdmin(admin.ModelAdmin):
         return qs.exclude(picture='')
 
     def birthday_tag(self, obj: Order):
-        return obj.formatted_birthday()
+        return obj.get_birthday_display()
 
     birthday_tag.short_description = _('birthday')
 
     def cpf_tag(self, obj: Order):
-        return obj.formatted_cpf()
+        return obj.get_cpf_display()
 
     cpf_tag.short_description = _('CPF')
 
@@ -56,12 +56,12 @@ class OrderAdmin(admin.ModelAdmin):
     name_tag.short_description = _('name')
 
     def identity_tag(self, obj: Order):
-        return obj.formatted_rg()
+        return obj.get_rg_display()
 
     identity_tag.short_description = _('identity')
 
     def degree_tag(self, obj: Order):
-        return obj.formatted_degree()
+        return obj.get_degree_display()
 
     degree_tag.short_description = _('academic degree')
 

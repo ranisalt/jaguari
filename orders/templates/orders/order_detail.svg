@@ -21,9 +21,9 @@
       <text x="29.6mm" y="25.7mm">{{ object.degree.get_tier_display }}</text>
       <text x="29.6mm" y="28.5mm">{{ object.degree.get_common_name }}</text>
 
-      <text x="39.6mm" y="32.5mm">{{ object.formatted_birthday }}</text>
-      <text x="39.6mm" y="35.2mm">{{ object.formatted_rg }}</text>
-      <text x="39.6mm" y="37.9mm">{{ object.formatted_cpf }}</text>
+      <text x="39.6mm" y="32.5mm">{{ object.get_birthday_display }}</text>
+      <text x="39.6mm" y="35.2mm">{{ object.get_rg_display }}</text>
+      <text x="39.6mm" y="37.9mm">{{ object.get_cpf_display }}</text>
     </g>
 
     <g font-size="3.0mm" font-weight="700" id="code">
