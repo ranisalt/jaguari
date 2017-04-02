@@ -55,7 +55,14 @@ class Degree(models.Model):
                                     choices=DEGREE_LEVEL_CHOICES,
                                     verbose_name=_('tier'))
     name = models.CharField(max_length=127, verbose_name=_('name'))
+    alias = models.CharField(blank=True,
+                             max_length=127,
+                             null=True,
+                             verbose_name=_('alias'))
     campus = models.SmallIntegerField(choices=CAMPI_CHOICES)
+
+    def get_common_name(self):
+        return self.alias if self.alias is not None else self.name
 
     class Meta:
         verbose_name = _('degree')

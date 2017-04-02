@@ -3,7 +3,7 @@ import os
 import responses
 import datetime
 from django.conf import settings
-from django.test import TransactionTestCase, override_settings
+from django.test import SimpleTestCase, TransactionTestCase, override_settings
 from django.urls import reverse
 from .factories import DegreeFactory, OrderFactory, TransactionFactory, \
     UserFactory
@@ -15,6 +15,15 @@ def resource(name: str, mode: str = 'r'):
 
 def ws(*args):
     return 'https://ws.ufsc.br/{}'.format('/'.join(args))
+
+
+class Degrees(SimpleTestCase):
+    def test_get_common_name(self):
+        degree = DegreeFactory.build(name='Test Name')
+        self.assertEqual('Test Name', degree.get_common_name())
+
+        degree = DegreeFactory.build(name='Test Name', alias='Test Alias')
+        self.assertEqual('Test Alias', degree.get_common_name())
 
 
 @override_settings(MEDIA_ROOT='/tmp/upload', PAGSEGURO_SANDBOX=True)
