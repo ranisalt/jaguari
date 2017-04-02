@@ -180,20 +180,20 @@ class Order(models.Model):
                                             default=NOT_READY,
                                             verbose_name=_('print status'))
 
-    def formatted_birthday(self):
+    def get_birthday_display(self):
         return self.birthday.strftime('%d/%m/%Y')
 
-    def formatted_cpf(self):
+    def get_cpf_display(self):
         parts = [self.cpf[i:i + 3] for i in range(0, 11, 3)]
         return '{}.{}.{}-{}'.format(*parts)
 
-    def formatted_degree(self):
+    def get_degree_display(self):
         return _('{tier} in {name} ({campus})').format(
             tier=self.degree.get_tier_display(),
-            name=self.degree.name,
+            name=self.degree.get_common_name(),
             campus=self.degree.get_campus_display())
 
-    def formatted_rg(self):
+    def get_rg_display(self):
         return '{} {}/{}'.format(self.identity_number,
                                  self.identity_issuer,
                                  self.identity_state)
