@@ -69,6 +69,9 @@ class Degree(models.Model):
     def get_common_name(self):
         return self.alias if self.alias is not None else self.name
 
+    def __repr__(self):
+        return '{} ({})'.format(self.get_common_name(), self.pk)
+
     class Meta:
         verbose_name = _('degree')
 
@@ -202,6 +205,9 @@ class Order(models.Model):
         return '{} {}/{}'.format(self.identity_number,
                                  self.identity_issuer,
                                  self.identity_state)
+
+    def __repr__(self):
+        return '{} ({})'.format(self.student.get_full_name(), self.pk)
 
     class Meta:
         ordering = ['-created_at']
