@@ -55,7 +55,7 @@ class Degree(models.Model):
                              verbose_name=_('id'))
     tier = models.SmallIntegerField(blank=False,
                                     choices=DEGREE_LEVEL_CHOICES,
-                                    editable=False
+                                    editable=False,
                                     verbose_name=_('tier'))
     name = models.CharField(editable=False,
                             max_length=127,
