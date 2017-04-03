@@ -10,6 +10,8 @@ from .models import Degree, Order
 class DegreeAdmin(admin.ModelAdmin):
     list_display = ('id', 'tier', 'name', 'alias', 'campus')
     list_filter = ('tier', 'campus')
+    fields = ('id', 'tier', 'name', 'alias', 'campus')
+    readonly_fields = ('id', 'tier', 'name', 'campus')
 
 
 strip_uuid = Func(Field('reference'), Value('-'), Value(''), function='REPLACE')
