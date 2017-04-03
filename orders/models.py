@@ -50,16 +50,21 @@ class Degree(models.Model):
         (BLN, 'Blumenau'),
     )
 
-    id = models.IntegerField(primary_key=True, verbose_name=_('id'))
+    id = models.IntegerField(editable=False,
+                             primary_key=True,
+                             verbose_name=_('id'))
     tier = models.SmallIntegerField(blank=False,
                                     choices=DEGREE_LEVEL_CHOICES,
+                                    editable=False
                                     verbose_name=_('tier'))
-    name = models.CharField(max_length=127, verbose_name=_('name'))
+    name = models.CharField(editable=False,
+                            max_length=127,
+                            verbose_name=_('name'))
     alias = models.CharField(blank=True,
                              max_length=127,
                              null=True,
                              verbose_name=_('alias'))
-    campus = models.SmallIntegerField(choices=CAMPI_CHOICES)
+    campus = models.SmallIntegerField(choices=CAMPI_CHOICES, editable=False)
 
     def get_common_name(self):
         return self.alias if self.alias is not None else self.name
