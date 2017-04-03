@@ -24,7 +24,7 @@ def degree(value):
     degree = Degree.objects.get(pk=value)
     parts = {
         'tier': degree.get_tier_display(),
-        'name': degree.name,
+        'name': degree.get_common_name(),
         'campus': degree.get_campus_display(),
     }
     return _('{tier} in {name} ({campus})').format(**parts)
