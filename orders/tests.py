@@ -5,8 +5,12 @@ import datetime
 from django.conf import settings
 from django.test import SimpleTestCase, TransactionTestCase, override_settings
 from django.urls import reverse
+from pagseguro.admin import TransactionAdmin
+from pagseguro.models import Transaction
+from .admin import TransactionStatusFilter
 from .factories import DegreeFactory, OrderFactory, TransactionFactory, \
     UserFactory
+from .models import Order
 
 
 def resource(name: str, mode: str = 'r'):
@@ -206,25 +210,73 @@ class Orders(TransactionTestCase):
                              'https://sandbox.pagseguro.uol.com.br/v2/checkout/payment.html?code=00000000000000000000000000000000',
                              fetch_redirect_response=False)
 
-    def test_order_transaction_status_filter(self):
-        from pagseguro.admin import TransactionAdmin
-        from pagseguro.models import Transaction
-        from .admin import TransactionStatusFilter
-        from .models import Order
-
+    def test_order_transaction_status_filter_none(self):
         for order in OrderFactory.create_batch(5):
             TransactionFactory(reference=str(order.pk))
 
         order = OrderFactory()
-        transaction = TransactionFactory(reference=str(order.pk), status='pago')
 
         filter = TransactionStatusFilter(request=None,
-                                         params={'status': 'pago'},
+                                         params={'status': 'none'},
                                          model=Transaction,
                                          model_admin=TransactionAdmin)
         result = filter.queryset(None, Order.objects.all())
         self.assertEqual(1, result.count())
         self.assertEqual(order, result.get())
+
+    def test_order_transaction_status_filter_waiting(self):
+        OrderFactory.create_batch(5)
+
+        filter = TransactionStatusFilter(request=None,
+                                         params={'status': 'waiting'},
+                                         model=Transaction,
+                                         model_admin=TransactionAdmin)
+
+        order = OrderFactory()
+        transaction = TransactionFactory(reference=str(order.pk),
+                                         status='aguardando')
+
+        result = filter.queryset(None, Order.objects.all())
+        self.assertEqual(1, result.count())
+        self.assertEqual(order, result.first())
+        self.assertEqual(transaction,
+                         Transaction.objects.get(reference=str(order.pk)))
+
+        order = OrderFactory()
+        transaction = TransactionFactory(reference=str(order.pk),
+                                         status='em_analise')
+
+        result = filter.queryset(None, Order.objects.all())
+        self.assertEqual(2, result.count())
+        self.assertEqual(order, result.first())
+        self.assertEqual(transaction,
+                         Transaction.objects.get(reference=str(order.pk)))
+
+    def test_order_transaction_status_filter_paid(self):
+        OrderFactory.create_batch(5)
+
+        filter = TransactionStatusFilter(request=None,
+                                         params={'status': 'paid'},
+                                         model=Transaction,
+                                         model_admin=TransactionAdmin)
+
+        order = OrderFactory()
+        transaction = TransactionFactory(reference=str(order.pk),
+                                         status='pago')
+
+        result = filter.queryset(None, Order.objects.all())
+        self.assertEqual(1, result.count())
+        self.assertEqual(order, result.first())
+        self.assertEqual(transaction,
+                         Transaction.objects.get(reference=str(order.pk)))
+
+        order = OrderFactory()
+        transaction = TransactionFactory(reference=str(order.pk),
+                                         status='disponivel')
+
+        result = filter.queryset(None, Order.objects.all())
+        self.assertEqual(2, result.count())
+        self.assertEqual(order, result.first())
         self.assertEqual(transaction,
                          Transaction.objects.get(reference=str(order.pk)))
 

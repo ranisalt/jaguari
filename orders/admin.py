@@ -22,15 +22,30 @@ class TransactionStatusFilter(admin.SimpleListFilter):
     parameter_name = 'status'
 
     def lookups(self, request, model_admin):
-        return TRANSACTION_STATUS_CHOICES
+        return (
+            ('none', _('none')),
+            ('waiting', _('waiting')),
+            ('paid', _('paid')),
+        )
 
     def queryset(self, request, queryset):
         if not self.value():
             return
 
-        inner_qs = Transaction.objects.filter(status=self.value()).annotate(
-            order_id=strip_uuid).values('order_id')
-        return queryset.filter(id__in=inner_qs)
+        transactions = Transaction.objects.annotate(order_id=strip_uuid)
+
+        if self.value() == 'none':
+            return queryset.exclude(id__in=transactions.values('order_id'))
+
+        if self.value() == 'waiting':
+            inner_qs = transactions.filter(
+                status__in=['aguardando', 'em_analise']).values('order_id')
+            return queryset.filter(id__in=inner_qs)
+
+        if self.value() == 'paid':
+            inner_qs = transactions.filter(
+                status__in=['pago', 'disponivel']).values('order_id')
+            return queryset.filter(id__in=inner_qs)
 
 
 @admin.register(Order)
