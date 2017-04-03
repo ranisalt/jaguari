@@ -98,29 +98,6 @@ STATIC_URL = '/static/'
 # File upload configuration
 MEDIA_URL = '/media/'
 
-# Security
-
-## Ensure cookie safety
-CSRF_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-
-## Provide full HTTPS + HSTS support
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_SECONDS = 15768000
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_REDIRECT_EXEMPT = 'orders/callback/'
-SECURE_SSL_REDIRECT = True
-
-## X-Content-Type-Options: nosniff
-SECURE_CONTENT_TYPE_NOSNIFF = True
-
-## X-Frame-Options: DENY
-X_FRAME_OPTIONS = 'DENY'
-
-## X-XSS-Protection: 1; mode=block
-SECURE_BROWSER_XSS_FILTER = True
-
 # Static file compression
 COMPRESS_PRECOMPILERS = [
     ('text/x-scss', 'django_libsass.SassCompiler'),
