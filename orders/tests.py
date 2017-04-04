@@ -280,6 +280,25 @@ class Orders(TransactionTestCase):
         self.assertEqual(transaction,
                          Transaction.objects.get(reference=str(order.pk)))
 
+    def test_order_valid_qrcode_generate(self):
+        OrderFactory(use_code='abcdefgh')
+
+        response = self.client.get(reverse('orders:qr', kwargs={
+            'slug': 'abcdefgh',
+        }))
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual('image/svg+xml', response['Content-Type'])
+
+    def test_order_invalid_qrcode_fail(self):
+        Order.objects.filter(use_code='abcdefgh').delete()
+
+        response = self.client.get(reverse('orders:qr', kwargs={
+            'slug': 'abcdefgh',
+        }))
+
+        self.assertEqual(404, response.status_code)
+
     def test_order_full_name_search(self):
         from orders.models import Order
 
