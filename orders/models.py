@@ -146,9 +146,6 @@ class OrderManager(models.Manager):
                     identity_state=data['codigoUfIdentidade'],
                     enrollment_number=enrollment_number)
 
-    def with_picture(self):
-        return self.exclude(picture='')
-
 
 def picture_path(instance, filename: str) -> str:
     import os
