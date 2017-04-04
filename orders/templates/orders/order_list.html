@@ -4,7 +4,9 @@
   <div class="container">
     <h1>Seus pedidos</h1>
     {% for object in object_list %}
-      <object data="{% url 'orders:detail' object.pk %}" type="image/svg+xml"></object>
+      <div>
+        <object data="{% url 'orders:detail' object.pk %}" type="image/svg+xml"></object>
+      </div>
     {% empty %}
       <p>Nenhum pedido feito.</p>
     {% endfor %}
