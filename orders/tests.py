@@ -224,11 +224,11 @@ class Orders(TransactionTestCase):
         self.assertEqual(1, result.count())
         self.assertEqual(order, result.get())
 
-    def test_order_transaction_status_filter_waiting(self):
+    def test_order_transaction_status_filter_pending(self):
         OrderFactory.create_batch(5)
 
         filter = TransactionStatusFilter(request=None,
-                                         params={'status': 'waiting'},
+                                         params={'status': 'pending'},
                                          model=Transaction,
                                          model_admin=TransactionAdmin)
 
@@ -252,11 +252,11 @@ class Orders(TransactionTestCase):
         self.assertEqual(transaction,
                          Transaction.objects.get(reference=str(order.pk)))
 
-    def test_order_transaction_status_filter_paid(self):
+    def test_order_transaction_status_filter_available(self):
         OrderFactory.create_batch(5)
 
         filter = TransactionStatusFilter(request=None,
-                                         params={'status': 'paid'},
+                                         params={'status': 'available'},
                                          model=Transaction,
                                          model_admin=TransactionAdmin)
 
@@ -276,6 +276,44 @@ class Orders(TransactionTestCase):
 
         result = filter.queryset(None, Order.objects.all())
         self.assertEqual(2, result.count())
+        self.assertEqual(order, result.first())
+        self.assertEqual(transaction,
+                         Transaction.objects.get(reference=str(order.pk)))
+
+    def test_order_transaction_status_filter_unavailable(self):
+        OrderFactory.create_batch(5)
+
+        filter = TransactionStatusFilter(request=None,
+                                         params={'status': 'unavailable'},
+                                         model=Transaction,
+                                         model_admin=TransactionAdmin)
+
+        order = OrderFactory()
+        transaction = TransactionFactory(reference=str(order.pk),
+                                         status='em_disputa')
+
+        result = filter.queryset(None, Order.objects.all())
+        self.assertEqual(1, result.count())
+        self.assertEqual(order, result.first())
+        self.assertEqual(transaction,
+                         Transaction.objects.get(reference=str(order.pk)))
+
+        order = OrderFactory()
+        transaction = TransactionFactory(reference=str(order.pk),
+                                         status='devolvido')
+
+        result = filter.queryset(None, Order.objects.all())
+        self.assertEqual(2, result.count())
+        self.assertEqual(order, result.first())
+        self.assertEqual(transaction,
+                         Transaction.objects.get(reference=str(order.pk)))
+
+        order = OrderFactory()
+        transaction = TransactionFactory(reference=str(order.pk),
+                                         status='cancelado')
+
+        result = filter.queryset(None, Order.objects.all())
+        self.assertEqual(3, result.count())
         self.assertEqual(order, result.first())
         self.assertEqual(transaction,
                          Transaction.objects.get(reference=str(order.pk)))

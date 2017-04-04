@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db.models.expressions import F as Field, Func, Value
 from django.utils.translation import ugettext_lazy as _
-from pagseguro.models import Transaction, TRANSACTION_STATUS_CHOICES
+from pagseguro.models import Transaction
 
 from .models import Degree, Order
 
@@ -23,9 +23,10 @@ class TransactionStatusFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         return (
-            ('none', _('none')),
-            ('waiting', _('waiting')),
-            ('paid', _('paid')),
+            ('none', _('No transaction')),
+            ('pending', _('Pending')),
+            ('available', _('Available')),
+            ('unavailable', _('Unavailable'))
         )
 
     def queryset(self, request, queryset):
@@ -34,18 +35,20 @@ class TransactionStatusFilter(admin.SimpleListFilter):
 
         transactions = Transaction.objects.annotate(order_id=strip_uuid)
 
-        if self.value() == 'none':
+        if self.value() == 'pending':
+            lookups = ['aguardando', 'em_analise']
+
+        elif self.value() == 'available':
+            lookups = ['pago', 'disponivel']
+
+        elif self.value() == 'unavailable':
+            lookups = ['em_disputa', 'devolvido', 'cancelado']
+
+        else:  # self.value() == 'none'
             return queryset.exclude(id__in=transactions.values('order_id'))
 
-        if self.value() == 'waiting':
-            inner_qs = transactions.filter(
-                status__in=['aguardando', 'em_analise']).values('order_id')
-            return queryset.filter(id__in=inner_qs)
-
-        if self.value() == 'paid':
-            inner_qs = transactions.filter(
-                status__in=['pago', 'disponivel']).values('order_id')
-            return queryset.filter(id__in=inner_qs)
+        inner_qs = transactions.filter(status__in=lookups).values('order_id')
+        return queryset.filter(id__in=inner_qs)
 
 
 @admin.register(Order)
