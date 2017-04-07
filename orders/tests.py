@@ -349,5 +349,19 @@ class Orders(TransactionTestCase):
         self.assertEqual(1, result.count())
         self.assertEqual(order, result.get())
 
+    def test_order_remove_picture_on_delete(self):
+        from shutil import copy
+
+        order = OrderFactory()
+
+        dest = os.path.join(settings.MEDIA_ROOT, str(order.pk) + '.jpg')
+        os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
+        copy(os.path.join(settings.BASE_DIR, 'fixtures', 'image.jpg'), dest)
+
+        order.picture = str(order.pk) + '.jpg'
+        order.delete()
+
+        self.assertFalse(os.path.isfile(dest))
+
     def tearDown(self):
         self.responses.__exit__()
