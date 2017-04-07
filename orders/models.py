@@ -213,3 +213,10 @@ class Order(models.Model):
         verbose_name = _('order')
 
     objects = OrderManager()
+
+
+@receiver(models.signals.post_delete, sender=Order)
+def post_delete(sender, instance: Order, **kwargs):
+    import os
+    if instance.picture and os.path.isfile(instance.picture.path):
+        os.remove(instance.picture.path)
