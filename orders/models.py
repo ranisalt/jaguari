@@ -156,10 +156,12 @@ def picture_path(instance, filename: str) -> str:
 
 class Order(models.Model):
     NOT_READY = 0
+    REGISTERED = 3
     READY = 1
     DELIVERED = 2
     PRINT_STATUS_CHOICES = (
         (NOT_READY, _('Waiting')),
+        (REGISTERED, _('Registered')),
         (READY, _('Printed')),
         (DELIVERED, _('Delivered')),
     )
