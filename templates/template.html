@@ -3,25 +3,22 @@
 <head>
   {% include 'head.html' %}
 
+  {% block 'extra_styles' %}{% endblock %}
   {% load compress %}
   {% load staticfiles %}
   {% compress css %}
     <link rel="stylesheet" type="text/x-scss" href="{% static 'cie.scss' %}">
-    {% block 'extra_styles' %}{% endblock %}
   {% endcompress %}
 </head>
 <body>
 <div class="site-wrapper">
   <div class="site-wrapper-inner">
-    <div class="cover-container">
-      {% block 'navbar' %}{% include 'navbar.html' %}{% endblock %}
+    {% block 'content' %}{% endblock %}
 
-      {% block 'content' %}{% endblock %}
-
-      {% include 'footer.html' %}
-    </div>
+    {% include 'footer.html' %}
   </div>
 </div>
+{% block 'extra_scripts' %}{% endblock %}
 {% compress js %}
   <script type="text/javascript" src="{% static 'cie.js' %}"></script>
 {% endcompress %}

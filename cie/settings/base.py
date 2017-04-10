@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_cas_ng',
     'compressor',
+    'formtools',
     'pagseguro',
     'accounts',
     'orders',

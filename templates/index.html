@@ -5,7 +5,7 @@
   <link rel="stylesheet" type="text/x-scss" href="{% static 'home.scss' %}">
 {% endblock %}
 
-{% block 'navbar' %}
+{% block 'content' %}
   <div class="masthead">
     <div class="inner">
       <h3 class="masthead-brand" href="{% url 'home' %}">DCE Luis Travassos</h3>
@@ -22,22 +22,22 @@
       </nav>
     </div>
   </div>
-{% endblock %}
 
-{% block 'content' %}
-  <div class="inner cover">
-    <h1 class="cover-heading">Carteira de Estudante</h1>
-    <p class="lead">
-      De acordo com a Lei 12.933/2013, o documento que comprova o seu vínculo
-      estudantil e garante seu direito deve seguir um padrão nacional e uma
-      série de critérios de identificação e segurança, que será produzido agora
-      pelo DCE da UFSC para você por um preço mais acessível e com prazo de
-      entrega muito mais rápido!
-    </p>
-    <p class="lead">
-      <a class="btn btn-lg btn-secondary" href="{% url 'orders:create' %}">
-        Solicite a sua!
-      </a>
-    </p>
+  <div class="cover-container">
+    <div class="inner cover">
+      <h1 class="cover-heading">Carteira de Estudante</h1>
+      <p class="lead">
+        De acordo com a Lei 12.933/2013, o documento que comprova o seu vínculo
+        estudantil e garante seu direito deve seguir um padrão nacional e uma
+        série de critérios de identificação e segurança, que será produzido agora
+        pelo DCE da UFSC para você por um preço mais acessível e com prazo de
+        entrega muito mais rápido!
+      </p>
+      <p class="lead">
+        <a class="btn btn-lg btn-secondary" href="{% url 'orders:create' %}">
+          Solicite a sua!
+        </a>
+      </p>
+    </div>
   </div>
 {% endblock %}

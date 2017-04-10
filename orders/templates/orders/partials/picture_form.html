@@ -1,0 +1,124 @@
+{% extends 'template.html' %}
+
+{% block 'extra_styles' %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.0.0-rc/cropper.min.css" integrity="sha384-HmccSo9aYo/1lsB0ENPpOIJnRcNNAAdVGnejXWaM5zrjvo6+zrHsfhbOM9W1TltA" crossorigin="anonymous">
+  <style>
+    .cropper-wrapper > :last-child {
+      margin-bottom: 1.5rem !important;
+    }
+
+    .cropper-wrapper img {
+      max-height: 100%;
+    }
+  </style>
+{% endblock %}
+
+{% block 'content' %}
+  {% load i18n %}
+  {% trans 'picture' as picture_text %}
+  {% trans 'confirm' as confirm_text %}
+
+  <div class="container custom-container">
+    <div class="form-section text-center">
+      <h4 class="mb-4">{% trans 'Select a picture' %}</h4>
+
+      <div class="row">
+        <div class="cropper-wrapper col mx-auto">
+          <!-- cropper goes here -->
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col mb-2 mx-auto">
+          <span class="mr-2"><strong>{{ picture_text | capfirst }}:</strong></span>
+          <span class="text-left">
+            <label class="custom-file">
+              <input type="file" id="order_picture" name="picture" class="uploader custom-file-input" accept="image/*" required/>
+              <span class="custom-file-control"></span>
+            </label>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-navigation text-center">
+      <div class="mt-2 mx-auto">
+        <form id="form" action="" method="post">
+          {% csrf_token %}
+          {{ wizard.management_form }}
+
+          <input type="submit" class="btn btn-lg btn-primary" value="{{ confirm_text | capfirst }}" disabled/>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block 'extra_scripts' %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.js" integrity="sha256-TwbS4LK+tgrH9bRI95pNnIukpG46IWrZgYkR+pEMx3o=" crossorigin="anonymous"></script>
+  <script>
+    function toggleConfirm(value) {
+      const $submit = document.querySelector('.form-navigation [type="submit"]')
+      $submit.disabled = !value
+    }
+
+    let cropper = null
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const $form = document.querySelector('#form')
+      $form.addEventListener('submit', event => {
+        event.preventDefault()
+        console.log(event)
+
+        const process = new Promise(resolve => {
+          const $canvas = cropper.getCroppedCanvas({
+            height: 720,
+            width: 576,
+          })
+
+          $canvas.toBlob(resolve)
+        }).then(blob => {
+          const formData = new FormData($form)
+          formData.append('picture', blob)
+
+          return fetch($form.action, {method: $form.method, body: formData})
+        })
+      })
+    })
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const $uploader = document.querySelector('.uploader')
+      $uploader.addEventListener('change', () => toggleConfirm(false))
+      $uploader.addEventListener('change', () => {
+        if (!$uploader.files || !$uploader.files[0]) {
+          return
+        }
+
+        const $wrapper = document.querySelector('.cropper-wrapper')
+
+        const reader = new FileReader()
+        reader.addEventListener('load', () => {
+          if (cropper) {
+            cropper.destroy()
+          }
+
+          const $image = new Image()
+          $image.src = reader.result
+
+          $wrapper.innerHTML = ""
+          $wrapper.appendChild($image)
+
+          cropper = new window.Cropper($image, {
+            aspectRatio: 4 / 5,
+            dragMode: 'move',
+            guides: false,
+            viewMode: 1,
+            ready: () => toggleConfirm(true)
+          })
+          toggleConfirm(true)
+        })
+        reader.readAsDataURL($uploader.files[0])
+      })
+    })
+  </script>
+{% endblock %}

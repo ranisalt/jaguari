@@ -1,9 +1,9 @@
-import iso8601
+from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
-from django.views.generic import CreateView, DetailView, ListView
-from pagseguro.api import PagSeguroApi, PagSeguroItem
-from .forms import OrderForm
+from django.views.generic import DetailView, ListView
+from formtools.wizard.views import SessionWizardView
+from .forms import OrderPictureForm
 from .models import Order
 
 
@@ -41,21 +41,30 @@ class OrderQrView(LoginRequiredMixin, DetailView):
                             content_type='image/svg+xml')
 
 
-class OrderCreateView(LoginRequiredMixin, CreateView):
-    form_class = OrderForm
-    model = Order
+class OrderCreateView(SessionWizardView):
+    form_list = [('review', forms.Form),
+                 ('picture', OrderPictureForm)]
+    template_name = 'orders/partials/{step}_form.html'
 
-    def get_initial(self):
-        userdata = self.request.session.get('userdata')
-        if userdata is None:
-            userdata = self.model.objects.fetch(self.request.user)
-            self.request.session['userdata'] = userdata.copy()
+    def get_template_names(self):
+        return [self.template_name.format(step=self.steps.current)]
 
-        userdata['birthday'] = iso8601.parse_date(userdata['birthday']).date()
-        return userdata
+    def get_form_initial(self, step):
+        if step == 'review':
+            userdata = Order.objects.fetch(self.request.user)
 
-    def get_success_url(self):
-        order = self.object
+            userdata['cpf'] = Order.format_cpf(userdata['cpf'])
+            userdata['degree'] = Order.format_degree(userdata['degree'])
+            userdata['rg'] = Order.format_rg(userdata['identity_number'],
+                                             userdata['identity_issuer'],
+                                             userdata['identity_state'])
+            return userdata
+
+        return super().get_form_initial(step)
+
+    def done(self, form_list, **kwargs) -> HttpResponse:
+        from django.shortcuts import redirect
+        from pagseguro.api import PagSeguroApi, PagSeguroItem
 
         item = PagSeguroItem(id=str(order.pk),
                              description='Carteira de Identificação Estudantil',
@@ -73,4 +82,5 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
 
         api.add_item(item)
         checkout = api.checkout()
-        return checkout['redirect_url']
+
+        return redirect(checkout['redirect_url'])

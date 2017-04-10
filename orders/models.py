@@ -1,3 +1,4 @@
+import iso8601
 import requests
 import uuid
 from django.conf import settings
@@ -138,8 +139,8 @@ class OrderManager(models.Manager):
         degree_id, enrollment_number = data['codigoCurso'], data['id']
         degree = Degree.objects.get_or_fetch(degree_id, enrollment_number)
         return dict(student_id=user.pk,
-                    degree_id=degree.pk,
-                    birthday=data['dataNascimento'],
+                    degree=degree,
+                    birthday=iso8601.parse_date(data['dataNascimento']).date(),
                     cpf=str(data['cpf']).zfill(11),
                     identity_number=data['identidade'],
                     identity_issuer=data['siglaOrgaoEmissorIdentidade'],
@@ -187,23 +188,38 @@ class Order(models.Model):
                                             default=NOT_READY,
                                             verbose_name=_('print status'))
 
+    @classmethod
+    def format_birthday(cls, birthday):
+        return birthday.strftime('%d/%m/%Y')
+
     def get_birthday_display(self):
-        return self.birthday.strftime('%d/%m/%Y')
+        return self.format_birthday(self.birthday)
+
+    @classmethod
+    def format_cpf(cls, cpf: str):
+        return '{}.{}.{}-{}'.format(*[cpf[i:i + 3] for i in range(0, 11, 3)])
 
     def get_cpf_display(self):
-        parts = [self.cpf[i:i + 3] for i in range(0, 11, 3)]
-        return '{}.{}.{}-{}'.format(*parts)
+        return self.format_cpf(self.cpf)
+
+    @classmethod
+    def format_degree(cls, degree: Degree):
+        return _('{tier} in {name} ({campus})').format(
+            tier=degree.get_tier_display(),
+            name=degree.get_common_name(),
+            campus=degree.get_campus_display())
 
     def get_degree_display(self):
-        return _('{tier} in {name} ({campus})').format(
-            tier=self.degree.get_tier_display(),
-            name=self.degree.get_common_name(),
-            campus=self.degree.get_campus_display())
+        return self.format_degree(self.degree)
+
+    @classmethod
+    def format_rg(cls, number, issuer, state):
+        return '{} {}/{}'.format(number, issuer, state)
 
     def get_rg_display(self):
-        return '{} {}/{}'.format(self.identity_number,
-                                 self.identity_issuer,
-                                 self.identity_state)
+        return self.format_rg(number=self.identity_number,
+                              issuer=self.identity_issuer,
+                              state=self.identity_state)
 
     def __str__(self):  # pragma: no cover
         return '{} ({})'.format(self.student.get_full_name(), self.pk)

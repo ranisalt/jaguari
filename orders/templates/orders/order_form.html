@@ -1,46 +1,197 @@
 {% extends 'template.html' %}
 
+{% block 'extra_styles' %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.0.0-rc/cropper.min.css" integrity="sha384-HmccSo9aYo/1lsB0ENPpOIJnRcNNAAdVGnejXWaM5zrjvo6+zrHsfhbOM9W1TltA" crossorigin="anonymous">
+  <style>
+    .cropper-wrapper > :last-child {
+      margin-bottom: 1.5rem !important;
+    }
+
+    .cropper-wrapper img {
+      max-height: 100%;
+    }
+
+    .form-section {
+      display: none;
+    }
+
+    .form-section.current {
+      display: block;
+    }
+  </style>
+{% endblock %}
+
 {% block 'content' %}
-  <div class="container">
-    <form enctype="multipart/form-data" method="post">
-      {% csrf_token %}
+  {% load i18n %}
 
-      {% load i18n %}
-      {% trans 'name' as name_text %}
-      {% trans 'birthday' as birthday_text %}
-      {% trans 'CPF' as cpf_text %}
-      {% trans 'identity' as identity_text %}
-      {% trans 'enrollment number' as enrollment_text %}
-      {% trans 'degree' as degree_text %}
-      {% trans 'submit order' as submit_text %}
+  <div class="container custom-container">
+    <div class="mb-4 mx-auto w-50">
+      <div class="progress custom-progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="3"></div>
+      </div>
+    </div>
 
-      {% load orders_extras %}
-      <p>
-        <label for="id_display-name">{{ name_text | capfirst }}:</label>
-        <span id="id_display-name">{{ request.user.get_full_name }}</span>
-      </p>
-      <p>
-        <label for="id_birthday">{{ birthday_text | capfirst }}:</label>
-        <span id="id_birthday">{{ form.initial.birthday | date:'d/m/Y' }}</span>
-      </p>
-      <p>
-        <label for="id_cpf">{{ cpf_text | capfirst }}:</label>
-        <span id="id_cpf">{{ form.initial | cpf }}</span>
-      </p>
-      <p>
-        <label for="id_identity">{{ identity_text | capfirst }}:</label>
-        <span id="id_identity">{{ form.initial | rg }}</span>
-      </p>
-      <p>
-        <label for="enrollment">{{ enrollment_text | capfirst }}:</label>
-        <span id="id_enrollment">{{ form.initial.enrollment_number }}</span>
-      </p>
-      <p>
-        <label for="id_degree">{{ degree_text | capfirst }}:</label>
-        <span id="id_degree">{{ form.initial.degree_id | degree }}</span>
-      </p>
-      {{ form.as_p }}
-      <input type="submit" value="{{ submit_text | capfirst }}"/>
-    </form>
+    <div id="cropper" class="form-section mb-4 text-center" data-progress="50%">
+      <h4 class="mb-4">{% trans 'Select a picture' %}</h4>
+      <div class="row">
+        <div class="cropper-wrapper col mx-auto">
+          <!-- cropper goes here -->
+        </div>
+      </div>
+      <div class="row">
+        <div class="col mx-auto">
+          <span class="mr-2"><strong>{{ picture_text | capfirst }}:</strong></span>
+          <span class="text-left">
+            <label class="custom-file">
+              <input type="file" id="order_picture" name="picture" class="uploader custom-file-input" accept="image/*" required/>
+              <span class="custom-file-control"></span>
+            </label>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div id="gateway" class="form-section mb-4 text-center" data-progress="75%">
+      <h4 class="mb-4">{% trans 'Checkout' %}</h4>
+    </div>
+
+    <div class="form-navigation text-center">
+      <div class="mt-2 mx-auto">
+        <button type="submit" class="next btn btn-lg btn-primary">
+          {{ confirm_text | capfirst }}
+        </button>
+      </div>
+    </div>
   </div>
+{% endblock %}
+
+{% block 'extra_scripts' %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js" integrity="sha256-aB35laj7IZhLTx58xw/Gm1EKOoJJKZt6RY+bH1ReHxs=" crossorigin="anonymous"></script>
+  <script src="https://stc.sandbox.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.lightbox.js" crossorigin="anonymous"></script>
+  <script>
+    let cropper = null
+
+    function advanceTab() {
+      if (this.disabled) {
+        return
+      }
+
+      const $current = document.querySelector('.form-section.current')
+      $current.classList.remove('current')
+      $current.dispatchEvent(new CustomEvent('blur'))
+
+      const $nextSibling = $current.nextElementSibling
+      $nextSibling.classList.add('current')
+      $nextSibling.dispatchEvent(new CustomEvent('focus'))
+
+      updateProgress()
+    }
+
+    function disableAdvance() {
+      document.querySelector('.form-navigation .next').disabled = true
+    }
+
+    function enableAdvance() {
+      document.querySelector('.form-navigation .next').disabled = false
+    }
+
+    function resetCropper() {
+      if (!this.files || !this.files[0]) {
+        return
+      }
+
+      const $wrapper = document.querySelector('#cropper .cropper-wrapper')
+
+      const reader = new FileReader()
+      reader.addEventListener('load', function () {
+        if (cropper) {
+          cropper.destroy()
+        }
+
+        const $image = new Image()
+        $image.src = this.result
+
+        $wrapper.innerHTML = ""
+        $wrapper.appendChild($image)
+
+        cropper = new Cropper($image, {
+          aspectRatio: 4 / 5,
+          dragMode: 'move',
+          guides: false,
+          viewMode: 1,
+          ready: enableAdvance
+        })
+      })
+      reader.readAsDataURL(this.files[0])
+
+      document.querySelector('.form-navigation .next')
+    }
+
+    function setupGateway() {
+      const process = new Promise(resolve => {
+        const $canvas = cropper.getCroppedCanvas({
+          height: 720,
+          width: 576,
+        })
+
+        $canvas.toBlob(resolve)
+      }).then(blob => {
+        const headers = new Headers()
+        headers.append('X-CSRFToken', Cookies.get('csrftoken'))
+
+        const body = new FormData()
+        body.append('picture', blob)
+
+        return fetch("{% url 'orders:create'%}", {
+          method: 'POST', headers, body
+        })
+      }).then(function () {
+        console.log(arguments)
+      })
+    }
+
+    function updateProgress() {
+      const $current = document.querySelector('.form-section.current')
+      const $progressBar = document.querySelector('.progress-bar')
+      $progressBar.style.width = $current.getAttribute('data-progress')
+    }
+
+    function registerEvents() {
+      const $info = this.querySelector('#info')
+      $info.addEventListener('focus', disableAdvance)
+      $info.addEventListener('focus', function () {
+        const $confirm = document.querySelector('.confirm')
+        $confirm.checked = false
+
+        $confirm.addEventListener('change', function () {
+          if (this.checked) {
+            enableAdvance()
+          } else {
+            disableAdvance()
+          }
+        })
+      })
+
+      const $cropper = this.querySelector('#cropper')
+      $cropper.addEventListener('focus', disableAdvance)
+      $cropper.addEventListener('focus', function () {
+        const $uploader = this.querySelector('.uploader')
+        $uploader.addEventListener('change', disableAdvance)
+        $uploader.addEventListener('change', resetCropper)
+      })
+
+      const $gateway = this.querySelector('#gateway')
+      $gateway.addEventListener('focus', disableAdvance)
+      $gateway.addEventListener('focus', setupGateway)
+
+      const $navigation = document.querySelector('.form-navigation')
+      $navigation.querySelector('.next').addEventListener('click', advanceTab)
+
+      $info.classList.add('current')
+      $info.dispatchEvent(new CustomEvent('focus'))
+    }
+
+    document.addEventListener('DOMContentLoaded', registerEvents)
+    document.addEventListener('DOMContentLoaded', updateProgress)
+  </script>
 {% endblock %}

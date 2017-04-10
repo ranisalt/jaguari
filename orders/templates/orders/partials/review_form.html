@@ -1,0 +1,77 @@
+{% extends 'template.html' %}
+
+{% block 'content' %}
+  {% load i18n %}
+  {% trans 'full_name' as full_name_text %}
+  {% trans 'birthday' as birthday_text %}
+  {% trans 'CPF' as cpf_text %}
+  {% trans 'identity' as identity_text %}
+  {% trans 'enrollment number' as enrollment_text %}
+  {% trans 'degree' as degree_text %}
+  {% trans 'confirm' as confirm_text %}
+
+  <div class="container custom-container">
+    <div class="form-section text-center">
+      <h4 class="mb-4">{% trans 'Confirm your information' %}</h4>
+
+      <dl class="row text-left">
+        <dt class="col-sm-4 text-sm-right">{{ full_name_text | capfirst }}:</dt>
+        <dd class="col-sm-8">{{ request.user.get_full_name }}</dd>
+
+        <dt class="col-sm-4 text-sm-right">{{ birthday_text | capfirst }}:</dt>
+        <dd class="col-sm-8">{{ form.initial.birthday | date:'SHORT_DATE_FORMAT' }}</dd>
+
+        <dt class="col-sm-4 text-sm-right">{{ cpf_text | capfirst }}:</dt>
+        <dd class="col-sm-8">{{ form.initial.cpf }}</dd>
+
+        <dt class="col-sm-4 text-sm-right">{{ identity_text | capfirst }}:</dt>
+        <dd class="col-sm-8">{{ form.initial.rg }}</dd>
+
+        <dt class="col-sm-4 text-sm-right">{{ enrollment_text | capfirst }}:</dt>
+        <dd class="col-sm-8">{{ form.initial.enrollment_number }}</dd>
+
+        <dt class="col-sm-4 text-sm-right">{{ degree_text | capfirst }}:</dt>
+        <dd class="col-sm-8">{{ form.initial.degree }}</dd>
+      </dl>
+
+      <div class="row">
+        <small class="alert alert-info mx-auto" role="alert">Informações incorretas devem ser alteradas na Coordenação do Curso ou no Departamento de Administração Escolar (DAE), mediante comprovação documental.</small>
+      </div>
+
+      <div class="row">
+        <label class="custom-control custom-checkbox mx-auto">
+          <input type="checkbox" class="confirm custom-control-input"/>
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">Confirmo que as informações acima são minhas e estão corretas.</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-navigation text-center">
+      <div class="mt-2 mx-auto">
+        <form action="" method="post">
+          {% csrf_token %}
+          {{ wizard.management_form }}
+
+          <input type="submit" class="btn btn-lg btn-primary" value="{{ confirm_text | capfirst }}" disabled/>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block 'extra_scripts' %}
+  <script>
+    function toggleConfirm(value) {
+      const $submit = document.querySelector('.form-navigation [type="submit"]')
+      $submit.disabled = !value
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const $confirm = this.querySelector('.confirm')
+      $confirm.checked = false
+
+      $confirm.addEventListener('change', () => toggleConfirm($confirm.checked))
+    })
+  </script>
+{% endblock %}
