@@ -51,9 +51,6 @@ class Orders(TransactionTestCase):
             self.assertEqual(subset[attr], dictionary[attr], msg)
 
     def setUp(self):
-        self.responses = responses.RequestsMock()
-        self.responses.__enter__()
-
         self.user = UserFactory()
         self.client.force_login(self.user)
 
@@ -80,8 +77,9 @@ class Orders(TransactionTestCase):
         self.assertTemplateUsed(response, 'orders/order_detail.svg')
         self.assertEqual(order, response.context['object'])
 
+    @responses.activate
     def test_new_order(self):
-        self.responses.add(
+        responses.add(
             method=responses.GET,
             url=ws('CAGRService', 'cursoGraduacaoAluno', '15100000'),
             json={
@@ -90,7 +88,7 @@ class Orders(TransactionTestCase):
                 'campus': {'id': 1},
             })
 
-        self.responses.add(
+        responses.add(
             method=responses.GET,
             url=ws('CadastroPessoaService',
                    'vinculosPessoaById',
@@ -115,11 +113,12 @@ class Orders(TransactionTestCase):
             'enrollment_number': '15100000',
         }, initial)
 
+    @responses.activate
     def test_new_order_missing_field(self):
         broken_links = copy.deepcopy(self.links)
         del broken_links[0]['siglaOrgaoEmissorIdentidade']
 
-        self.responses.add(
+        responses.add(
             method=responses.GET,
             url=ws('CadastroPessoaService',
                    'vinculosPessoaById',
@@ -132,11 +131,12 @@ class Orders(TransactionTestCase):
         self.assertEqual(400, response.status_code)
         self.assertTemplateUsed(response, 'errors/missing_fields.html')
 
+    @responses.activate
     def test_new_order_no_active_link(self):
         broken_links = copy.deepcopy(self.links)
         broken_links[0]['ativo'] = False
 
-        self.responses.add(
+        responses.add(
             method=responses.GET,
             url=ws('CadastroPessoaService',
                    'vinculosPessoaById',
@@ -149,11 +149,12 @@ class Orders(TransactionTestCase):
         self.assertEqual(400, response.status_code)
         self.assertTemplateUsed(response, 'errors/no_valid_link.html')
 
+    @responses.activate
     def test_new_order_no_regular_link(self):
         broken_links = copy.deepcopy(self.links)
         broken_links[0]['codigoSituacao'] += 1
 
-        self.responses.add(
+        responses.add(
             method=responses.GET,
             url=ws('CadastroPessoaService',
                    'vinculosPessoaById',
@@ -166,11 +167,12 @@ class Orders(TransactionTestCase):
         self.assertEqual(400, response.status_code)
         self.assertTemplateUsed(response, 'errors/no_valid_link.html')
 
+    @responses.activate
     def test_new_order_no_undergraduate_link(self):
         broken_links = copy.deepcopy(self.links)
         broken_links[0]['codigoVinculo'] += 1
 
-        self.responses.add(
+        responses.add(
             method=responses.GET,
             url=ws('CadastroPessoaService',
                    'vinculosPessoaById',
@@ -183,10 +185,18 @@ class Orders(TransactionTestCase):
         self.assertEqual(400, response.status_code)
         self.assertTemplateUsed(response, 'errors/no_valid_link.html')
 
+    @responses.activate
     def test_post_new_order(self):
-        degree = DegreeFactory(id=123)
+        responses.add(
+            method=responses.GET,
+            url=ws('CAGRService', 'cursoGraduacaoAluno', '15100000'),
+            json={
+                'codigo': 123,
+                'nomeCompleto': 'Science Engineering',
+                'campus': {'id': 1},
+            })
 
-        self.responses.add(
+        responses.add(
             method=responses.GET,
             url=ws('CadastroPessoaService',
                    'vinculosPessoaById',
@@ -194,7 +204,7 @@ class Orders(TransactionTestCase):
             json=self.links)
 
         with resource('checkout.xml') as payload:
-            self.responses.add(
+            responses.add(
                 method=responses.POST,
                 url='https://ws.sandbox.pagseguro.uol.com.br/v2/checkout',
                 body=payload.read(),
@@ -362,6 +372,3 @@ class Orders(TransactionTestCase):
         order.delete()
 
         self.assertFalse(os.path.isfile(dest))
-
-    def tearDown(self):
-        self.responses.__exit__()
