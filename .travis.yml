@@ -6,5 +6,5 @@ python:
 env:
     - DJANGO_SETTINGS_MODULE="cie.settings.development"
 install: pip install poetry && poetry install
-script: coverage run manage.py test
+script: pytest
 after_success: coveralls

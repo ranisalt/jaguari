@@ -71,21 +71,10 @@ python-versions = "*"
 platform = "*"
 
 [package.dependencies]
-docopt = ">= 0.6.1.0"
-coverage = ">= 3.6.0.0"
-requests = ">= 1.0.0.0"
+docopt = ">=0.6.1"
+coverage = ">=3.6"
+requests = ">=1.0.0"
 urllib3 = "*"
-[[package]]
-name = "cryptography"
-version = "2.2.2"
-description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers."
-category = "main"
-optional = false
-python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
-platform = "*"
-
-[package.requirements]
-python = "~2.7"
 [[package]]
 name = "django"
 version = "2.0.6"
@@ -116,7 +105,7 @@ python-versions = "*"
 platform = "*"
 
 [package.dependencies]
-python-cas = ">= 1.2.0.0"
+python-cas = ">=1.2.0"
 [[package]]
 name = "django-compressor"
 version = "2.2"
@@ -127,9 +116,9 @@ python-versions = "*"
 platform = "*"
 
 [package.dependencies]
-django-appconf = ">= 1.0.0.0"
-rcssmin = "== 1.0.6.0"
-rjsmin = "== 1.0.12.0"
+django-appconf = ">=1.0"
+rcssmin = "1.0.6"
+rjsmin = "1.0.12"
 [[package]]
 name = "django-libsass"
 version = "0.7"
@@ -140,8 +129,8 @@ python-versions = "*"
 platform = "UNKNOWN"
 
 [package.dependencies]
-django-compressor = ">= 1.3.0.0"
-libsass = ">= 0.7.0.0"
+django-compressor = ">=1.3"
+libsass = ">=0.7.0"
 [[package]]
 name = "django-localflavor-br"
 version = "1.0"
@@ -152,7 +141,7 @@ python-versions = "*"
 platform = "UNKNOWN"
 
 [package.dependencies]
-Django = ">= 1.4.0.0"
+Django = ">=1.4"
 [[package]]
 name = "django-pagseguro2"
 version = "2.0.4"
@@ -167,7 +156,7 @@ xmltodict = "*"
 python-dateutil = "*"
 requests = "*"
 six = "*"
-Django = ">= 1.8.0.0"
+Django = ">=1.8"
 [[package]]
 name = "docopt"
 version = "0.6.2"
@@ -187,7 +176,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 platform = "*"
 
 [package.dependencies]
-Faker = ">= 0.7.0.0"
+Faker = ">=0.7.0"
 [[package]]
 name = "faker"
 version = "0.8.16"
@@ -199,14 +188,14 @@ platform = "any"
 
 [package.dependencies]
 ipaddress = "*"
-text-unidecode = "== 1.2.0.0"
-six = ">= 1.10.0.0"
-python-dateutil = ">= 2.4.0.0"
+text-unidecode = "1.2"
+six = ">=1.10"
+python-dateutil = ">=2.4"
 [[package]]
 name = "funcsigs"
 version = "1.0.2"
 description = "Python function signatures from PEP362 for Python 2.6, 2.7 and 3.2+"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 platform = "UNKNOWN"
@@ -214,7 +203,7 @@ platform = "UNKNOWN"
 [package.dependencies]
 ordereddict = "*"
 [package.requirements]
-python = "<3.0"
+python = "<3.3"
 [[package]]
 name = "idna"
 version = "2.7"
@@ -228,7 +217,7 @@ platform = "*"
 name = "ipaddress"
 version = "1.0.22"
 description = "IPv4/IPv6 manipulation library"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 platform = "*"
@@ -256,6 +245,21 @@ platform = "*"
 [package.dependencies]
 six = "*"
 [[package]]
+name = "mock"
+version = "2.0.0"
+description = "Rolling backport of unittest.mock for all Pythons"
+category = "main"
+optional = false
+python-versions = "*"
+platform = "UNKNOWN"
+
+[package.dependencies]
+pbr = ">=0.11"
+six = ">=1.9"
+funcsigs = ">=1"
+[package.requirements]
+python = "2.6.* || 2.7.* || 3.2.*"
+[[package]]
 name = "more-itertools"
 version = "4.2.0"
 description = "More routines for operating on iterables, beyond itertools"
@@ -265,7 +269,7 @@ python-versions = "*"
 platform = "*"
 
 [package.dependencies]
-six = "< 2.0.0.0, >= 1.0.0.0"
+six = ">=1.0.0,<2.0.0"
 [[package]]
 name = "mysqlclient"
 version = "1.3.12"
@@ -279,13 +283,22 @@ platform = "ALL"
 name = "ordereddict"
 version = "1.1"
 description = "A drop-in substitute for Py2.7's new collections.OrderedDict that works in Python 2.4-2.6."
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 platform = "UNKNOWN"
 
 [package.requirements]
-python = "<3.0"
+python = "<2.7"
+[[package]]
+name = "pbr"
+version = "4.0.4"
+description = "Python Build Reasonableness"
+category = "main"
+optional = false
+python-versions = "*"
+platform = "*"
+
 [[package]]
 name = "pillow"
 version = "5.1.0"
@@ -314,20 +327,6 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 platform = "unix"
 
 [[package]]
-name = "pyopenssl"
-version = "17.5.0"
-description = "Python wrapper module around the OpenSSL library"
-category = "main"
-optional = false
-python-versions = "*"
-platform = "*"
-
-[package.dependencies]
-cryptography = ">= 2.1.4.0"
-six = ">= 1.5.2.0"
-[package.requirements]
-python = "~2.7"
-[[package]]
 name = "pytest"
 version = "3.6.1"
 description = "pytest: simple powerful testing with Python"
@@ -339,13 +338,36 @@ platform = "unix"
 [package.dependencies]
 colorama = "*"
 funcsigs = "*"
-pluggy = "< 0.7.0.0, >= 0.5.0.0"
-atomicwrites = ">= 1.0.0.0"
-more-itertools = ">= 4.0.0.0"
-attrs = ">= 17.4.0.0"
+pluggy = ">=0.5,<0.7"
+atomicwrites = ">=1.0"
+more-itertools = ">=4.0.0"
+attrs = ">=17.4.0"
 setuptools = "*"
-six = ">= 1.10.0.0"
-py = ">= 1.5.0.0"
+six = ">=1.10.0"
+py = ">=1.5.0"
+[[package]]
+name = "pytest-cov"
+version = "2.5.1"
+description = "Pytest plugin for measuring coverage."
+category = "dev"
+optional = false
+python-versions = "*"
+platform = "*"
+
+[package.dependencies]
+coverage = ">=3.7.1"
+pytest = ">=2.6.0"
+[[package]]
+name = "pytest-django"
+version = "3.3.0"
+description = "A Django plugin for pytest."
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+platform = "*"
+
+[package.dependencies]
+pytest = ">=3.6"
 [[package]]
 name = "python-cas"
 version = "1.2.0"
@@ -368,7 +390,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 platform = "*"
 
 [package.dependencies]
-six = ">= 1.5.0.0"
+six = ">=1.5"
 [[package]]
 name = "pytz"
 version = "2018.4"
@@ -409,10 +431,10 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 platform = "*"
 
 [package.dependencies]
-certifi = ">= 2017.4.17.0"
-urllib3 = "< 1.24.0.0, >= 1.21.1.0"
-idna = "< 2.8.0.0, >= 2.5.0.0"
-chardet = "< 3.1.0.0, >= 3.0.2.0"
+certifi = ">=2017.4.17"
+urllib3 = ">=1.21.1,<1.24"
+idna = ">=2.5,<2.8"
+chardet = ">=3.0.2,<3.1.0"
 [[package]]
 name = "responses"
 version = "0.9.0"
@@ -423,9 +445,10 @@ python-versions = "*"
 platform = "*"
 
 [package.dependencies]
-requests = ">= 2.0.0.0"
+requests = ">=2.0"
 cookies = "*"
 six = "*"
+mock = "*"
 [[package]]
 name = "rjsmin"
 version = "1.0.12"
@@ -433,6 +456,15 @@ description = "Javascript Minifier"
 category = "main"
 optional = false
 python-versions = "*"
+platform = "*"
+
+[[package]]
+name = "setuptools"
+version = "39.2.0"
+description = "Easily download, build, install, upgrade, and uninstall Python packages"
+category = "dev"
+optional = false
+python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*"
 platform = "*"
 
 [[package]]
@@ -462,12 +494,6 @@ optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4"
 platform = "*"
 
-[package.dependencies]
-ipaddress = "*"
-certifi = "*"
-idna = ">= 2.0.0.0"
-cryptography = ">= 1.3.4.0"
-pyOpenSSL = ">= 0.14.0.0, < 18.0.0.0"
 [[package]]
 name = "xmltodict"
 version = "0.11.0"
@@ -480,7 +506,7 @@ platform = "all"
 [metadata]
 python-versions = "*"
 platform = "*"
-content-hash = "e271fe499d89c0247b3ab8f6e9c8275ccbebb0832966ce83fcae754cd5d06ffa"
+content-hash = "f5265e9b3111a023dd6e389ebd57e46d38ed92e2c499d6ae312912cabbd7853c"
 
 [metadata.hashes]
 atomicwrites = [ "a24da68318b08ac9c9c45029f4a10371ab5b20e4226738e150e6e7c571630ae6", "240831ea22da9ab882b551b31d4225591e5e447a68c5e188db5b89ca1d487585",]
@@ -491,7 +517,6 @@ colorama = [ "463f8483208e921368c9f306094eb6f725c6ca42b0f97e313cb5d5512459feda",
 cookies = [ "15bee753002dff684987b8df8c235288eb8d45f8191ae056254812dfd42c81d3", "d6b698788cae4cfa4e62ef8643a9ca332b79bd96cb314294b864ae8d7eb3ee8e",]
 coverage = [ "7608a3dd5d73cb06c531b8925e0ef8d3de31fed2544a7de6c63960a1e73ea4bc", "3a2184c6d797a125dca8367878d3b9a178b6fdd05fdc2d35d758c3006a1cd694", "f3f501f345f24383c0000395b26b726e46758b71393267aeae0bd36f8b3ade80", "0b136648de27201056c1869a6c0d4e23f464750fd9a9ba9750b8336a244429ed", "337ded681dd2ef9ca04ef5d93cfc87e52e09db2594c296b4a0a3662cb1b41249", "3eb42bf89a6be7deb64116dd1cc4b08171734d721e7a7e57ad64cc4ef29ed2f1", "be6cfcd8053d13f5f5eeb284aa8a814220c3da1b0078fa859011c7fffd86dab9", "69bf008a06b76619d3c3f3b1983f5145c75a305a0fea513aca094cae5c40a8f5", "2eb564bbf7816a9d68dd3369a510be3327f1c618d2357fa6b1216994c2e3d508", "9d6dd10d49e01571bf6e147d3b505141ffc093a06756c60b053a859cb2128b1f", "701cd6093d63e6b8ad7009d8a92425428bc4d6e7ab8d75efbb665c806c1d79ba", "5a13ea7911ff5e1796b6d5e4fbbf6952381a611209b736d48e675c2756f3f74e", "c1bb572fab8208c400adaf06a8133ac0712179a334c09224fb11393e920abcdd", "03481e81d558d30d230bc12999e3edffe392d244349a90f4ef9b88425fac74ba", "28b2191e7283f4f3568962e373b47ef7f0392993bb6660d079c62bd50fe9d162", "de4418dadaa1c01d497e539210cb6baa015965526ff5afc078c57ca69160108d", "8c3cb8c35ec4d9506979b4cf90ee9918bc2e49f84189d9bf5c36c0c1119c6558", "7e1fe19bd6dce69d9fd159d8e4a80a8f52101380d5d3a4d374b6d3eae0e5de9c", "6bc583dc18d5979dc0f6cec26a8603129de0304d5ae1f17e57a12834e7235062", "198626739a79b09fa0a2f06e083ffd12eb55449b5f8bfdbeed1df4910b2ca640", "7aa36d2b844a3e4a4b356708d79fd2c260281a7390d678a10b91ca595ddc9e99", "3d72c20bd105022d29b14a7d628462ebdc61de2f303322c0212a054352f3b287", "4635a184d0bbe537aa185a34193898eee409332a8ccb27eea36f262566585000", "e05cb4d9aad6233d67e0541caa7e511fa4047ed7750ec2510d466e806e0255d6", "76ecd006d1d8f739430ec50cc872889af1f9c1b6b8f48e29941814b09b0fd3cc", "7d3f553904b0c5c016d1dad058a7554c7ac4c91a789fca496e7d8347ad040653", "3c79a6f7b95751cdebcd9037e4d06f8d5a9b60e4ed0cd231342aa8ad7124882a", "56e448f051a201c5ebbaa86a5efd0ca90d327204d8b059ab25ad0f35fbfd79f1", "ac4fef68da01116a5c117eba4dd46f2e06847a497de5ed1d64bb99a5fda1ef91", "1c383d2ef13ade2acc636556fd544dba6e14fa30755f26812f54300e401f98f2", "b8815995e050764c8610dbc82641807d196927c3dbed207f0a079833ffcf588d", "104ab3934abaf5be871a583541e8829d6c19ce7bde2923b2751e0d3ca44db60a", "9e112fcbe0148a6fa4f0a02e8d58e94470fc6cb82a5481618fea901699bf34c4", "15b111b6a0f46ee1a485414a52a7ad1d703bdf984e9ed3c288a4414d3871dcbd", "e4d96c07229f58cb686120f168276e434660e4358cc9cf3b0464210b04913e77", "f8a923a85cb099422ad5a2e345fe877bbc89a8a8b23235824a93488150e45f6e",]
 coveralls = [ "32569a43c9dbc13fa8199247580a4ab182ef439f51f65bb7f8316d377a1340e8", "664794748d2e5673e347ec476159a9d87f43e0d2d44950e98ed0e27b98da8346",]
-cryptography = [ "abd070b5849ed64e6d349199bef955ee0ad99aefbad792f0c587f8effa681a5e", "3f3b65d5a16e6b52fba63dc860b62ca9832f51f1a2ae5083c78b6840275f12dd", "77d0ad229d47a6e0272d00f6bf8ac06ce14715a9fd02c9a97f5a2869aab3ccb2", "808fe471b1a6b777f026f7dc7bd9a4959da4bfab64972f2bbe91e22527c1c037", "6fef51ec447fe9f8351894024e94736862900d3a9aa2961528e602eb65c92bdb", "60bda7f12ecb828358be53095fc9c6edda7de8f1ef571f96c00b2363643fa3cd", "5cb990056b7cadcca26813311187ad751ea644712022a3976443691168781b6f", "c332118647f084c983c6a3e1dba0f3bcb051f69d12baccac68db8d62d177eb8a", "f57008eaff597c69cf692c3518f6d4800f0309253bb138b526a37fe9ef0c7471", "551a3abfe0c8c6833df4192a63371aa2ff43afd8f570ed345d31f251d78e7e04", "db6013746f73bf8edd9c3d1d3f94db635b9422f503db3fc5ef105233d4c011ab", "d6f46e862ee36df81e6342c2177ba84e70f722d9dc9c6c394f9f1f434c4a5563", "9b62fb4d18529c84b961efd9187fecbb48e89aa1a0f9f4161c61b7fc42a101bd", "9e5bed45ec6b4f828866ac6a6bedf08388ffcfa68abe9e94b34bb40977aba531", "f6c821ac253c19f2ad4c8691633ae1d1a17f120d5b01ea1d256d7b602bc59887", "ba6a774749b6e510cffc2fb98535f717e0e5fd91c7c99a61d223293df79ab351", "9fc295bf69130a342e7a19a39d7bbeb15c0bcaabc7382ec33ef3b2b7d18d2f63",]
 django = [ "69ff89fa3c3a8337015478a1a0744f52a9fef5d12c1efa01a01f99bcce9bf10c", "3eb25c99df1523446ec2dc1b00e25eb2ecbdf42c9d8b0b8b32a204a8db9011f8",]
 django-appconf = [ "ddab987d14b26731352c01ee69c090a4ebfc9141ed223bef039d79587f22acd9", "6a4d9aea683b4c224d97ab8ee11ad2d29a37072c0c6c509896dd9857466fb261",]
 django-cas-ng = [ "9feed2ba9b4deec172e697f96a65863580e166c8b2f18ea99240694c299ec33a",]
@@ -507,14 +532,17 @@ idna = [ "156a6814fb5ac1fc6850fb002e0852d56c0c8d2531923a51032d1b70760e186e", "68
 ipaddress = [ "64b28eec5e78e7510698f6d4da08800a5c575caa4a286c93d651c5d3ff7b6794", "b146c751ea45cad6188dd6cf2d9b757f6f4f8d6ffb96a023e6f2e26eea02a72c",]
 iso8601 = [ "210e0134677cc0d02f6028087fee1df1e1d76d372ee1db0bf30bf66c5c1c89a3", "bbbae5fb4a7abfe71d4688fd64bff70b91bbd74ef6a99d964bab18f7fdf286dd", "49c4b20e1f38aa5cf109ddcd39647ac419f928512c869dc01d5c7098eddede82",]
 libsass = [ "1cf80c04a77d36fd77f00b1ae0a269eee780d971fabd9d493b15d30de9857ae5", "1d55dfe8e91a15a7d72d7f8aca16e74da36899e70d911af66d7184f1c82e2b39", "a0ffca466b35fb57f2afe1f1c5fd39b4c51a4107596d28ef8c0d3bb0962244b5", "62771c8ead9227579891814dd714be645243741aa23e5cb232ac0c245cf29a37", "cbd5ee83d3603a2b2c2937d8f06acc07b30fd22642ea2460c966d4fd6217f1d0", "7b9e7179b5f4fc32bc716f86e9ccaeb48ab90e7eb6648b339440346733af8828", "0f2e421d3e5a53833243e0a5f2cf7ebe9812725a7f27a797c38f3c7190ce2a82", "4dcd5b546bed977276f97eb7a2a13cb7cbf0a38d672e7b5525b7587c8cabcf27", "e00b6c6d75a6e912990cbc23d48ddfdbfefc3e400c20be6593988839292248c5", "23755425149fe0f576fd0ab7bcd151fe09400b2d980fe176c28f6c19e053c830", "1b74aff85f1560d629a070552ec67f9f0ff9a47446ffafddafad9944f7589ae1", "4a434d5b713b97c4141fb71c59341d4ebff8669114b14c626af51e145a48710e", "de1eae502764b3dde294d6652a0046489cf31008de190c4dd8d05e7f4b5e0d71", "ed8beef197efc6e6ab0ad03cea0885b31cc11f226290783649b4dafe1fb2ea27", "727fb84326ffa930bc09fad8b706e77ada4d13b3adf35cce134962a434d7eccb",]
+mock = [ "5ce3c71c5545b472da17b72268978914d0252980348636840bd34a00b5cc96c1", "b158b6df76edd239b8208d481dc46b6afd45a846b7812ff0ce58971cf5bc8bba",]
 more-itertools = [ "a18d870ef2ffca2b8463c0070ad17b5978056f403fb64e3f15fe62a52db21cc0", "6703844a52d3588f951883005efcf555e49566a48afd4db4e965d69b883980d3", "2b6b9893337bfd9166bee6a62c2b0c9fe7735dcf85948b387ec8cba30e85d8e8",]
 mysqlclient = [ "b3b1a7e4468180afb79289b54069d9499242946a4cedf3928cbf6b2a13800016", "d56e379c03efad746e84705cbb97401f60d1f98b05e11a27f2d9c2d043936974", "371df79d000af56b4e540b7ce2120d1c9afb04b751bfce25a1eb609c50fd10ff", "1e85e48b167e2af3bb08f273fdbd1ad6401cbe75057fa6513f97387dc7b282dc", "2d9ec33de39f4d9c64ad7322ede0521d85829ce36a76f9dd3d6ab76a9c8648e5",]
 ordereddict = [ "1c35b4ac206cef2d24816c89f89cf289dd3d38cf7c449bb3fab7bf6d43f01b1f",]
+pbr = [ "3747c6f017f2dc099986c325239661948f9f5176f6880d9fdef164cb664cd665", "a9c27eb8f0e24e786e544b2dbaedb729c9d8546342b5a6818d8eda098ad4340d",]
 pillow = [ "f0d4433adce6075efd24fc0285135248b0b50f5a58129c7e552030e04fe45c7f", "81762cf5fca9a82b53b7b2d0e6b420e0f3b06167b97678c81d00470daa622d58", "b48401752496757e95304a46213c3155bc911ac884bed2e9b275ce1c1df3e293", "040144ba422216aecf7577484865ade90e1a475f867301c48bf9fbd7579efd76", "b6cf18f9e653a8077522bb3aa753a776b117e3e0cc872c25811cfdf1459491c2", "4d32c8e3623a61d6e29ccd024066cd1ba556555abfb4cd714155020e00107e3f", "438a3faf5f702c8d0f80b9f9f9b8382cfa048ca6a0d64ef71b86b563b0ee0359", "1cb38df69362af35c14d4a50123b63c7ff18ec9a6d4d5da629a6f19d05e16ba8", "4d8077fd649ac40a5c4165f2c22fa2a4ad18c668e271ecb2f9d849d1017a9313", "bb8adab1877e9213385cbb1adc297ed8337e01872c42a30cfaa66ff8c422779c", "f1f3bd92f8e12dc22884935a73c9f94c4d9bd0d34410c456540713d6b7832b8c", "6eca36905444c4b91fe61f1b9933a47a30480738a1dd26501ff67d94fc2bc112", "f7634d534662bbb08976db801ba27a112aee23e597eeaf09267b4575341e45bf", "eeb247f4f4d962942b3b555530b0c63b77473c7bfe475e51c6b75b7344b49ce3", "ea0091cd4100519cedfeea2c659f52291f535ac6725e2368bcf59e874f270efa", "e87cc1acbebf263f308a8494272c2d42016aa33c32bf14d209c81e1f65e11868", "3b4560c3891b05022c464b09121bd507c477505a4e19d703e1027a3a7c68d896", "7673e7473a13107059377c96c563aa36f73184c29d2926882e0a0210b779a1e7", "fe6931db24716a0845bd8c8915bd096b77c2a7043e6fc59ae9ca364fe816f08b", "f5f302db65e2e0ae96e26670818157640d3ca83a3054c290eff3631598dcf819", "9b66e968da9c4393f5795285528bc862c7b97b91251f31a08004a3c626d18114", "62ec7ae98357fcd46002c110bb7cad15fce532776f0cbe7ca1d44c49b837d49d", "d0dc1313dff48af64517cbbd85e046d6b477fbe5e9d69712801f024dcb08c62b", "00633bc2ec40313f4daf351855e506d296ec3c553f21b66720d0f1225ca84c6f", "16246261ff22368e5e32ad74d5ef40403ab6895171a7fc6d34f6c17cfc0f1943", "e52e8f675ba0b2b417fa98579e7286a41a8e23871f17f4793772f5aa884fea79", "6c7cab6a05351cf61e469937c49dbf3cdf5ffb3eeac71f8d22dc9be3507598d8", "e39142332541ed2884c257495504858b22c078a5d781059b07aba4c3a80d7551", "8554bbeb4218d9cfb1917c69e6f2d2ad0be9b18a775d2162547edf992e1f5f1f", "2400e122f7b21d9801798207e424cbe1f716cee7314cd0c8963fdb6fc564b5fb", "a00edb2dec0035e98ac3ec768086f0b06dfabb4ad308592ede364ef573692f55", "fdd374c02e8bb2d6468a85be50ea66e1c4ef9e809974c30d8576728473a6ed03", "df5863a21f91de5ecdf7d32a32f406dd9867ebb35d41033b8bd9607a21887599", "472a124c640bde4d5468f6991c9fa7e30b723d84ac4195a77c6ab6aea30f2b9c", "cee9bc75bff455d317b6947081df0824a8f118de2786dc3d74a3503fd631f4ef", "2ee6364b270b56a49e8b8a51488e847ab130adc1220c171bed6818c0d4742455", "03514478db61b034fc5d38b9bf060f994e5916776e93f02e59732a8270069c61", "74e2ebfd19c16c28ad43b8a28ff73b904ed382ea4875188838541751986e8c9a", "e6dd55d5d94b9e36929325dd0c9ab85bfde84a5fc35947c334c32af1af668944", "f42a87cbf50e905f49f053c0b1fb86c911c730624022bf44c8857244fc4cdaca", "d5bf527ed83617edd1855a5c923eeeaf68bcb9ac0ceb28e3f19b575b3a424984", "41374a6afb3f44794410dab54a0d7175e6209a5a02d407119c81083f1a4c1841", "c8a4b39ba380b57a31a4b5449a9d257b1302d8bc4799767e645dcee25725efe1",]
 pluggy = [ "d345c8fe681115900d6da8d048ba67c25df42973bda370783cd58826442dcd7c", "e160a7fcf25762bb60efc7e171d4497ff1d8d2d75a3d0df7a21b76821ecbf5c5", "7f8ae7f5bdf75671a718d2daf0a64b7885f74510bcd98b1a0bb420eb9a9d0cff",]
 py = [ "983f77f3331356039fdd792e9220b7b8ee1aa6bd2b25f567a963ff1de5a64f6a", "29c9fab495d7528e80ba1e343b958684f4ace687327e6f789a94bf3d1915f881",]
-pyopenssl = [ "07a2de1a54de07448732a81e38a55df7da109b2f47f599f8bb35b0cbec69d4bd", "2c10cfba46a52c0b0950118981d61e72c1e5b1aac451ca1bc77de1a679456773",]
 pytest = [ "26838b2bc58620e01675485491504c3aa7ee0faf335c37fcd5f8731ca4319591", "32c49a69566aa7c333188149ad48b58ac11a426d5352ea3d8f6ce843f88199cb",]
+pytest-cov = [ "890fe5565400902b0c78b5357004aab1c814115894f4f21370e2433256a3eeec", "03aa752cf11db41d281ea1d807d954c4eda35cfa1b21d6971966cc041bbf6e2d",]
+pytest-django = [ "ac34de5fbd2356632bdc38e00aacc98137e48298d49e8a5ae41216d35e45a90e", "745d2659213de09d2da17eb9397db863359f6005a83b0875882d1ad3d64115cb",]
 python-cas = [ "849f20e1691e7a256aece9f57ad7ff8554b2703280aee74dc207878f5c1fa1fb",]
 python-dateutil = [ "1adb80e7a782c12e52ef9a8182bebeb73f1d7e24e374397af06fb4956c8dc5c0", "e27001de32f627c22380a688bcc43ce83504a7bc5da472209b4c70f02829f0b8",]
 pytz = [ "65ae0c8101309c45772196b21b74c46b2e5d11b6275c45d251b150d5da334555", "c06425302f2cf668f1bba7a0a03f3c1d34d4ebeef2c72003da308b3947c7f749",]
@@ -523,6 +551,7 @@ rcssmin = [ "ca87b695d3d7864157773a61263e5abb96006e9ff0e021eff90cbe0e1ba18270",]
 requests = [ "63b52e3c866428a224f97cab011de738c36aec0185aa91cfacd418b5d58911d1", "ec22d826a36ed72a7358ff3fe56cbd4ba69dd7a6718ffd450ff0e9df7a47ce6a",]
 responses = [ "f23a29dca18b815d9d64a516b4a0abb1fbdccff6141d988ad8100facb81cf7b3", "c6082710f4abfb60793899ca5f21e7ceb25aabf321560cc0726f8b59006811c9",]
 rjsmin = [ "dd9591aa73500b08b7db24367f8d32c6470021f39d5ab4e50c7c02e4401386f1",]
+setuptools = [ "8fca9275c89964f13da985c3656cb00ba029d7f3916b37990927ffdf264e7926", "f7cddbb5f5c640311eb00eab6e849f7701fa70bf6a183fc8a2c33dd1d1672fb2",]
 six = [ "832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb", "70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9",]
 text-unidecode = [ "801e38bd550b943563660a91de8d4b6fa5df60a542be9093f7abf819f86050cc", "5a1375bb2ba7968740508ae38d92e1f889a0832913cb1c447d5e2046061a396d",]
 urllib3 = [ "b5725a0bd4ba422ab0e66e89e030c806576753ea3ee08554382c14e685d117b5", "a68ac5e15e76e7e5dd2b8f94007233e01effe3e50e8daddf69acfd81cb686baf",]
