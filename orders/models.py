@@ -1,5 +1,6 @@
 import requests
 import uuid
+from urllib.parse import urlunparse
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
@@ -12,14 +13,14 @@ from django_localflavor_br.br_states import STATE_CHOICES
 
 
 class DegreeManager(models.Manager):
-    endpoint = 'https://ws.ufsc.br/CAGRService/cursoGraduacaoAluno/{}'
-
     def get_or_fetch(self, pk, enrollment_hint):
         try:
             return self.get(pk=pk)
         except Degree.DoesNotExist:
-            response = requests.get(self.endpoint.format(enrollment_hint),
-                                    auth=settings.CAGR_KEY).json()
+            endpoint = urlunparse(('https', 'ws.ufsc.br', '/'.join([
+                'CAGRService', 'cursoGraduacaoAluno', enrollment_hint
+            ]), '', '', ''))
+            response = requests.get(endpoint, auth=settings.CAGR_KEY).json()
 
             return self.create(id=response['codigo'],
                                tier=Degree.UNDERGRADUATE,
@@ -70,7 +71,7 @@ class Degree(models.Model):
         return self.alias if self.alias is not None else self.name
 
     def __str__(self):  # pragma: no cover
-        return '{} ({})'.format(self.get_common_name(), self.pk)
+        return f'{self.get_common_name()} ({self.pk})'
 
     class Meta:
         verbose_name = _('degree')
@@ -98,7 +99,6 @@ class NoValidLinkError(ValueError):
 
 
 class OrderManager(models.Manager):
-    endpoint = 'https://ws.ufsc.br/CadastroPessoaService/vinculosPessoaById/{}'
     required_fields = {
         'codigoCurso': _('degree'),
         'codigoUfIdentidade': _('identity state'),
@@ -123,8 +123,10 @@ class OrderManager(models.Manager):
             """
             return ativo and codigoSituacao == 0 and codigoVinculo == 1
 
-        response = requests.get(self.endpoint.format(user.get_username()),
-                                auth=settings.CAGR_KEY).json()
+        endpoint = urlunparse(('https', 'ws.ufsc.br', '/'.join([
+            'CadastroPessoaService', 'vinculosPessoaById', user.get_username()
+        ]), '', '', ''))
+        response = requests.get(endpoint, auth=settings.CAGR_KEY).json()
 
         links = [link for link in response if is_valid(**link)]
         if len(links) == 0:
@@ -191,22 +193,25 @@ class Order(models.Model):
         return self.birthday.strftime('%d/%m/%Y')
 
     def get_cpf_display(self):
-        parts = [self.cpf[i:i + 3] for i in range(0, 11, 3)]
-        return '{}.{}.{}-{}'.format(*parts)
+        *parts, verifier = [self.cpf[i:i + 3] for i in range(0, 11, 3)]
+        return f'{".".join(parts)}-{verifier}'
 
     def get_degree_display(self):
-        return _('{tier} in {name} ({campus})').format(
-            tier=self.degree.get_tier_display(),
-            name=self.degree.get_common_name(),
-            campus=self.degree.get_campus_display())
+        tier = self.degree.get_tier_display()
+        name = self.degree.get_common_name()
+        campus = self.degree.get_campus_display()
+        return _('{tier} in {name} ({campus})').format(tier=tier,
+                                                       name=name,
+                                                       campus=campus)
 
     def get_rg_display(self):
-        return '{} {}/{}'.format(self.identity_number,
-                                 self.identity_issuer,
-                                 self.identity_state)
+        number = self.identity_number
+        issuer = self.identity_issuer
+        state = self.identity_state
+        return f'{number} {issuer}/{state}'
 
     def __str__(self):  # pragma: no cover
-        return '{} ({})'.format(self.student.get_full_name(), self.pk)
+        return '{self.student.get_full_name()} ({self.pk})'
 
     class Meta:
         ordering = ['-created_at']

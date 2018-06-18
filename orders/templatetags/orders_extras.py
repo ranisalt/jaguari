@@ -7,27 +7,25 @@ register = template.Library()
 
 def cpf(value):
     raw = value['cpf']
-    parts = [raw[i:i + 3] for i in range(0, 11, 3)]
-    return '{}.{}.{}-{}'.format(*parts)
+    *parts, verifier = [raw[i:i + 3] for i in range(0, 11, 3)]
+    return f'{".".join(parts)}-{verifier}'
 
 
 def rg(value):
-    parts = {
-        'number': value['identity_number'],
-        'issuer': value['identity_issuer'],
-        'state': value['identity_state'],
-    }
-    return '{number} {issuer}/{state}'.format(**parts)
+    number = value['identity_number']
+    issuer = value['identity_issuer']
+    state = value['identity_state']
+    return f'{number} {issuer}/{state}'
 
 
 def degree(value):
     degree = Degree.objects.get(pk=value)
-    parts = {
-        'tier': degree.get_tier_display(),
-        'name': degree.get_common_name(),
-        'campus': degree.get_campus_display(),
-    }
-    return _('{tier} in {name} ({campus})').format(**parts)
+    tier = degree.get_tier_display()
+    name = degree.get_common_name()
+    campus = degree.get_campus_display()
+    return _('{tier} in {name} ({campus})').format(tier=tier,
+                                                   name=name,
+                                                   campus=campus)
 
 
 register.filter('cpf', cpf)

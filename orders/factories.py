@@ -9,7 +9,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
 
-    username = factory.LazyAttributeSequence(lambda o, n: '1{:014d}'.format(n))
+    username = factory.Sequence(lambda n: str(10 ** 14 + n))
     name = factory.Faker('name')
     email = factory.Faker('email')
 
@@ -23,7 +23,7 @@ class DegreeFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Degree
 
-    id = factory.LazyAttributeSequence(lambda o, n: '{:03d}'.format(n))
+    id = factory.Sequence(lambda n: str(n).zfill(3))
     tier = Degree.UNDERGRADUATE
     campus = factory.Iterator(x for (x, _) in Degree.CAMPI_CHOICES)
 

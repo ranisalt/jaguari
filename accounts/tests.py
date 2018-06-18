@@ -21,7 +21,7 @@ class Accounts(TransactionTestCase):
         with responses.RequestsMock() as r, resource('login.xml', 'rb') as body:
             r.add(responses.POST, 'https://sistemas.ufsc.br/samlValidate',
                   body=body.read())
-            self.client.login(ticket='ST-{}'.format(uuid.uuid4()),
+            self.client.login(ticket=f'ST-{uuid.uuid4()}',
                               service=settings.CAS_SERVER_URL,
                               request=req)
 
@@ -41,7 +41,7 @@ class Accounts(TransactionTestCase):
                                                      'rb') as body:
             r.add(responses.POST, 'https://sistemas.ufsc.br/samlValidate',
                   body=body.read())
-            self.client.login(ticket='ST-{}'.format(uuid.uuid4()),
+            self.client.login(ticket=f'ST-{uuid.uuid4()}',
                               service=settings.CAS_SERVER_URL,
                               request=req)
 

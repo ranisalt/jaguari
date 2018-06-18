@@ -1,4 +1,5 @@
 import iso8601
+from urllib.parse import urlunparse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.views.generic import CreateView, DetailView, ListView
@@ -30,8 +31,10 @@ class OrderQrView(LoginRequiredMixin, DetailView):
         import qrcode
         from qrcode.image.svg import SvgPathImage
 
-        url = 'https://cie.dce.ufsc.br/atributos/ws/dceufsc/{}'
-        image = qrcode.make(url.format(self.object.use_code),
+        url = urlunparse(('https', 'cie.dce.ufsc.br', '/'.join([
+            'atributos', 'ws', 'dceufsc', self.object.use_code
+        ]), '', '', ''))
+        image = qrcode.make(url,
                             error_correction=qrcode.constants.ERROR_CORRECT_L,
                             image_factory=SvgPathImage)
 

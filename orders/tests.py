@@ -2,6 +2,7 @@ import copy
 import os
 import responses
 import datetime
+from urllib.parse import urlunparse
 from django.conf import settings
 from django.test import SimpleTestCase, TransactionTestCase, override_settings
 from django.urls import reverse
@@ -18,7 +19,7 @@ def resource(name: str, mode: str = 'r'):
 
 
 def ws(*args):
-    return 'https://ws.ufsc.br/{}'.format('/'.join(args))
+    return urlunparse(('https', 'ws.ufsc.br', '/'.join(args), '', '', ''))
 
 
 class Degrees(SimpleTestCase):
