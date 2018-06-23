@@ -158,6 +158,15 @@ requests = "*"
 six = "*"
 Django = ">=1.8"
 [[package]]
+name = "django-split-settings"
+version = "0.3.0"
+description = "Organize Django settings into multiple files and directories. Easily override and modify settings. Use wildcards and optional settings files."
+category = "main"
+optional = false
+python-versions = "*"
+platform = "*"
+
+[[package]]
 name = "docopt"
 version = "0.6.2"
 description = "Pythonic argument parser, that will make you smile"
@@ -506,7 +515,7 @@ platform = "all"
 [metadata]
 python-versions = "*"
 platform = "*"
-content-hash = "f5265e9b3111a023dd6e389ebd57e46d38ed92e2c499d6ae312912cabbd7853c"
+content-hash = "11dcf594058de788241b146d238b28c921ba40671a7657978d843d800c12e9e2"
 
 [metadata.hashes]
 atomicwrites = [ "a24da68318b08ac9c9c45029f4a10371ab5b20e4226738e150e6e7c571630ae6", "240831ea22da9ab882b551b31d4225591e5e447a68c5e188db5b89ca1d487585",]
@@ -524,6 +533,7 @@ django-compressor = [ "7732676cfb9d58498dfb522b036f75f3f253f72ea1345ac036434fdc4
 django-libsass = [ "49db3334b87e1f7955c4f9fb9945bc296f8bfd27a14d6d89706e4b0e5dc5de1c",]
 django-localflavor-br = [ "d1ab2f63fd891822b500dbe8b59b6f297d73245e6b00d49847b21306d585e66a",]
 django-pagseguro2 = [ "65604dd7bb0cbe7454076c6c4a4d7b627012683d8c97757995079630d18efb3b", "3bfcff0debb15354659823ec290647beba3a2a4143d738c63cbe89bb0d33139b",]
+django-split-settings = [ "14b164dbd724e52aa9a0b0338eefa988a8a0f17f7cba34e0f983e5348682aeb7", "04f6b551111fdbcb4f669ac9004ac2d4a27197a36ca88444cb896378807ed777",]
 docopt = [ "49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491",]
 factory-boy = [ "d552cb872b310ae78bd7429bf318e42e1e903b1a109e899a523293dfa762ea4f", "6f25cc4761ac109efd503f096e2ad99421b1159f01a29dbb917359dcd68e08ca",]
 faker = [ "fe48f35aa3443bc5655b0782d3a2f594bf4882d0e2a947b80207a60494d32907", "04645d946256b835c675c1cef7c03817a164b0c4e452018fd50b212ddff08c22",]
