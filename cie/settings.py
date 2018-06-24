@@ -1,9 +1,9 @@
-from os import environ, pardir, path
+import os
 from split_settings.tools import include, optional
 
-BASE_DIR = path.join(path.dirname(path.abspath(__file__)), pardir)
+BASE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
 
-ENV = environ.get('DJANGO_ENV', 'development')
+ENV = os.environ.get('DJANGO_ENV', 'development')
 
 settings = [
     'components/application.py',
@@ -18,7 +18,5 @@ settings = [
     # Optionally override some settings:
     optional('env/local.py'),
 ]
-
-print(settings)
 
 include(*settings)
