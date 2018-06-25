@@ -1,4 +1,5 @@
 from django.conf.urls import include, url
+
 from .views import OrderCreateView, OrderDetailView, OrderQrView, OrdersView
 
 app_name = 'orders'

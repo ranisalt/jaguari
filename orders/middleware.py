@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.utils.deprecation import MiddlewareMixin
+
 from .models import MissingFieldsError, NoValidLinkError
 
 

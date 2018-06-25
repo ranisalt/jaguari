@@ -1,16 +1,17 @@
 import copy
-import os
-import responses
 import datetime
+import os
 from urllib.parse import urlunparse
+
+import responses
 from django.conf import settings
 from django.test import SimpleTestCase, TransactionTestCase, override_settings
 from django.urls import reverse
 from pagseguro.admin import TransactionAdmin
 from pagseguro.models import Transaction
+
 from .admin import TransactionStatusFilter
-from .factories import DegreeFactory, OrderFactory, TransactionFactory, \
-    UserFactory
+from .factories import DegreeFactory, OrderFactory, TransactionFactory, UserFactory
 from .models import Order
 
 

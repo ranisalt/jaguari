@@ -1,4 +1,5 @@
 import os
+
 from split_settings.tools import include, optional
 
 BASE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)

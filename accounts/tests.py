@@ -1,6 +1,7 @@
 import os
-import responses
 import uuid
+
+import responses
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.http import HttpRequest

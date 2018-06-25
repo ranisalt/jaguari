@@ -1,5 +1,6 @@
 from django.contrib import admin
-from django.db.models.expressions import F as Field, Func, Value
+from django.db.models.expressions import F as Field
+from django.db.models.expressions import Func, Value
 from django.utils.translation import ugettext_lazy as _
 from pagseguro.models import Transaction
 
